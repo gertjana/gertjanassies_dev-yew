@@ -4,9 +4,9 @@ use yew::prelude::*;
 pub fn footer() -> Html {
     html! {
         <footer>
-        <div class="footer">
-            <p>{ "© 2024 My Blog too" }</p>
-        </div>
+            <div class="footer">
+                <p>{ "© 2025 Addictive Software. All rights reserved. this code is licensed under the MIT License." }</p>
+            </div>
         </footer>
     }
 }

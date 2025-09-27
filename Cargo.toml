@@ -1,5 +1,5 @@
 [package]
-name = "blog-yew"
+name = "gertjanassies_dev-yew"
 version = "0.1.0"
 edition = "2021"
 description = "Rust webasm trunk blog using yew"

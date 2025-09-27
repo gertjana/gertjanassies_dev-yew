@@ -17,7 +17,7 @@ summary: "Communicating with a backend using MQTT and OCPP"
 >  * Part 1: [A Proof of Concept](/blog/240101_rust_on_esp32)
 >  * Part 2: [A minimal EV Charger hardware setup](/blog/240125_rust_on_esp32_2_hardware)
 >  * Part 3: Network and Charger to backoffice communication (Wifi/ MQTT / OCPP) (this article)
->  * Part 4: Optional: Charger to Car communication (Mode2) 
+>  * Part 4: Optional: Charger to Car communication (Mode2)
 
 
 ## references
@@ -26,5 +26,3 @@ summary: "Communicating with a backend using MQTT and OCPP"
 * M5 Stamp ESP32-C3U: https://docs.m5stack.com/en/core/stamp_c3u
 * The embedded rust book:  https://docs.rust-embedded.org/book/
 * Espresiff ESP-32: https://www.espressif.com/en/products/socs/esp32
-
-

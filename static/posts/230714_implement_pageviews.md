@@ -31,7 +31,7 @@ import Redis from 'ioredis';
 
 const connection = () => {
   let connection = process.env.REDIS_CONNECTION ?? "redis://localhost:6379";
-  return new Redis(connection);    
+  return new Redis(connection);
 }
 ```
 
@@ -42,7 +42,7 @@ import { dev } from '$app/environment';
 
 export const incrementPageView: (slug: string) => Promise<number>  = async (slug: string) => {
   let prefix = "prod";
-  if (dev) { prefix = "dev"; } 
+  if (dev) { prefix = "dev"; }
  return await redis().incr(`${prefix}:post:${slug}:views`);
 }
 ```
@@ -64,10 +64,10 @@ export const getPageViews: () => Promise<PageView[]> = async () => {
   if (dev) { prefix = "dev"; }
 
   const keys = await connection().keys(`${prefix}:post:*:views`);
-  
+
   if (keys.length != 0) {
     const views: string[] = (await redis().mget(...keys)).map((view) => view ?? '0');
-  
+
     return keys.map((key, index) => {
         return {
             slug: key.split(':')[2],

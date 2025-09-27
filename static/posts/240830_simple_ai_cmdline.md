@@ -19,7 +19,7 @@ summary: "how to create an AI prompt on the commandline"
 You: Write a Haiku about using Generative AI on the commandline
 Prompt in the dark,
 AI weaves words on the screen,
-Code sings a new song. 
+Code sings a new song.
 ```
 
 
@@ -40,7 +40,7 @@ def main():
         user_input = input("You: ")
         response = chat.send_message(user_input)
         print(response.text)
-        
+
 if __name__ == "__main__":
     main()
 ```

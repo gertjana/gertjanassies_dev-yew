@@ -23,7 +23,7 @@ It uses I2C to communicate with an eeprom, for display detection, and SPI to upd
 
 Primoroni has created a python library to make it easier to use, I'm saying easier as under the hood it's using the Pillow (PIL) library to manipulate images, what you need to do is create an image, draw all your text, lines, icons etc on it and then tell it to display that image on the screen, which is quite a low level way to create an application.
 
-For a few seconds I thought about creating a small UI library, that would allow me to use lists and tables etc, but that would take much more time and I'm just testing out this display, nothing more, so hardcoded positions with the occassional overlap it is. 
+For a few seconds I thought about creating a small UI library, that would allow me to use lists and tables etc, but that would take much more time and I'm just testing out this display, nothing more, so hardcoded positions with the occassional overlap it is.
 
 ## Starting with the library
 
@@ -34,12 +34,12 @@ For a few seconds I thought about creating a small UI library, that would allow 
 
   display = auto(ask_user=True, verbose=True)
   image = Image.new("P", disp.resolution, disp.WHITE)
-  
+
   canvas = ImageDraw.Draw(image)
   canvas.text((10, 10), "Hello World", disp.WHITE, ImageFont.truetype(SourceSansProSemibold, 48))
 
   display.set_image(image)
-  display.show()  
+  display.show()
 ```
 
 ## Getting the data
@@ -76,10 +76,10 @@ def getWeather(api_key, lat, lon):
   daily=requests.get(url).json()["daily"][0]
   weather = daily["weather"][0]
   return {
-           "temp": daily["temp"]["day"], 
-           "feel": daily["feels_like"]["day"], 
-           "pressure": daily["pressure"], 
-           "humidity": daily["humidity"], 
+           "temp": daily["temp"]["day"],
+           "feel": daily["feels_like"]["day"],
+           "pressure": daily["pressure"],
+           "humidity": daily["humidity"],
            "main": weather["main"],
            "desc": weather["description"],
            "icon": weather["icon"]
@@ -92,6 +92,4 @@ I use zenquotes as there are free
 def getQuote():
   quote = requests.get('https://zenquotes.io?api=random').json()[0]
   return f'"{quote["q"]}" - {quote["a"]}'
-``` 
-
-
+```

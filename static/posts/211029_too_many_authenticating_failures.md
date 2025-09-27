@@ -5,7 +5,7 @@ author: Gertjan Assies
 tags: tips, SSH
 category: tooling
 image: "/static/images/sorry_were_closed.jpg"
-summary: "One morning I tried to login into a remote system using ssh and suddenly I got the above error. 
+summary: "One morning I tried to login into a remote system using ssh and suddenly I got the above error.
 It took me a bit of time to figure out what the problem was.
 
 I'm writing this here so that it might save someone some time in the future."

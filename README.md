@@ -11,7 +11,7 @@ This blog serves dual purposes:
 ## Why Yew & WASM?
 
 I use this blog to experiment with cutting-edge web technologies. This iteration explores:
-- **Yew Framework**: Rust's component-based web framework 
+- **Yew Framework**: Rust's component-based web framework
 - **WebAssembly**: Running Rust code in the browser with near-native performance
 - **Modern Web Patterns**: Single-page applications, component architecture
 

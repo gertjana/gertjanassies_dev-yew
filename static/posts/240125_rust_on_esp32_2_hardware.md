@@ -17,7 +17,7 @@ summary: "Focusing on the minimal hardware needed to build an EV Charger with Ru
 >  * Part 1: [A Proof of Concept](/blog/240101_rust_on_esp32)
 >  * Part 2: [A minimal EV Charger hardware setup](/blog/240125_rust_on_esp32_2_hardware) (this article)
 >  * Part 3: Network and Charger to backoffice communication (Wifi/ MQTT / OCPP)
->  * Part 4: Optional: Charger to Car communication (Mode2) 
+>  * Part 4: Optional: Charger to Car communication (Mode2)
 
 The previous [article](/blog/240101_rust_on_esp32) was about try-ing to get Rust running on a esp32 microcontroller.
 
@@ -37,7 +37,7 @@ Putting all this into a schematic it looks something like this:
 
 ## Managing State
 
-As a Charger goes through several states during it's operation (Available, Occupied, Charging, Error) 
+As a Charger goes through several states during it's operation (Available, Occupied, Charging, Error)
 a FSM (Finite State Machine) looks like a good way to model this.
 
 A FSM works as follows:
@@ -140,5 +140,3 @@ The next article will focus on sending and retrieving OCPP Messages to a backend
 * M5 Stamp ESP32-C3U: https://docs.m5stack.com/en/core/stamp_c3u
 * The embedded rust book:  https://docs.rust-embedded.org/book/
 * Espresiff ESP-32: https://www.espressif.com/en/products/socs/esp32
-
-

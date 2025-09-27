@@ -12,7 +12,7 @@
         },
         highlightElement: function(element) {
             var language = getLanguage(element);
-            
+
             var code = element.textContent;
             var highlighted = Prism.highlight(code, language);
             element.innerHTML = highlighted;
@@ -31,7 +31,7 @@
 
     function tokenize(text, language) {
         if (!text) return text;
-        
+
         // Create tokens with positions to avoid overlapping
         var tokens = [];
         var patterns = [
@@ -43,7 +43,7 @@
             { type: 'operator', regex: /[+\-*/%=!<>&|^~?:]+|->|=>|\.\.|\.\.\./g },
             { type: 'punctuation', regex: /[{}[\];(),.:]/g }
         ];
-        
+
         // Add language-specific patterns
         if (language === 'rust') {
             patterns.push({ type: 'macro', regex: /\b\w+!/g });
@@ -51,11 +51,11 @@
         } else if (language === 'python') {
             patterns.push({ type: 'decorator', regex: /@\w+/g });
         }
-        
+
         // Find all matches
         patterns.forEach(function(pattern) {
             if (!pattern.regex) return;
-            
+
             var match;
             pattern.regex.lastIndex = 0; // Reset regex
             while ((match = pattern.regex.exec(text)) !== null) {
@@ -65,23 +65,23 @@
                     end: match.index + match[0].length,
                     text: match[0]
                 });
-                
+
                 // Prevent infinite loop
                 if (match.index === pattern.regex.lastIndex) {
                     pattern.regex.lastIndex++;
                 }
             }
         });
-        
+
         // Sort tokens by position
         tokens.sort(function(a, b) { return a.start - b.start; });
-        
+
         // Remove overlapping tokens (keep first one)
         var filteredTokens = [];
         for (var i = 0; i < tokens.length; i++) {
             var token = tokens[i];
             var overlaps = false;
-            
+
             for (var j = 0; j < filteredTokens.length; j++) {
                 var existing = filteredTokens[j];
                 if (token.start < existing.end && token.end > existing.start) {
@@ -89,28 +89,28 @@
                     break;
                 }
             }
-            
+
             if (!overlaps) {
                 filteredTokens.push(token);
             }
         }
-        
+
         // Build highlighted string
         var result = '';
         var lastIndex = 0;
-        
+
         filteredTokens.forEach(function(token) {
             // Add text before token
             result += escapeHtml(text.substring(lastIndex, token.start));
             // Add highlighted token
-            result += '<span class="token ' + token.type + '">' + 
+            result += '<span class="token ' + token.type + '">' +
                      escapeHtml(token.text) + '</span>';
             lastIndex = token.end;
         });
-        
+
         // Add remaining text
         result += escapeHtml(text.substring(lastIndex));
-        
+
         return result;
     }
 
@@ -124,7 +124,7 @@
             bash: 'if|then|else|elif|fi|for|do|done|while|until|case|esac|function|select|time|coproc',
             shell: 'if|then|else|elif|fi|for|do|done|while|until|case|esac|function|select|time|coproc'
         };
-        
+
         var keywordList = keywords[language] || keywords.javascript;
         return new RegExp('\\b(' + keywordList + ')\\b', 'g');
     }
@@ -159,7 +159,7 @@
             if (mutation.type === 'childList') {
                 mutation.addedNodes.forEach(function(node) {
                     if (node.nodeType === 1) {
-                        var hasCode = node.querySelectorAll && 
+                        var hasCode = node.querySelectorAll &&
                             node.querySelectorAll('code[class*="language-"], pre[class*="language-"]').length > 0;
                         if (hasCode) {
                             hasNewCode = true;
@@ -168,12 +168,12 @@
                 });
             }
         });
-        
+
         if (hasNewCode) {
             highlightCode();
         }
     });
-    
+
     if (document.body) {
         observer.observe(document.body, {
             childList: true,

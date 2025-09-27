@@ -914,3 +914,38 @@ footer {
   }
 }
 
+/* Online Places - Social Icons */
+.online-places {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5em;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 1em 0;
+}
+
+.online-place {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.online-place a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  text-decoration: none;
+}
+
+.online-place a:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+.online-place svg {
+  width: 3em;
+  height: 3em;
+  display: block;
+}
+

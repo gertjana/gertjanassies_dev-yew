@@ -13,7 +13,7 @@ This blog serves dual purposes:
 I use this blog to experiment with cutting-edge web technologies. This iteration explores:
 - **Yew Framework**: Rust's component-based web framework 
 - **WebAssembly**: Running Rust code in the browser with near-native performance
-- **Modern Web Patterns**: Single-page applications, component architecture, and build-time optimizations
+- **Modern Web Patterns**: Single-page applications, component architecture
 
 ## Features
 
@@ -88,4 +88,4 @@ MIT
 
 ---
 
-*This blog is a continuous experiment in web technologies and personal expression. Expect occasional technical deep-dives alongside random musings about code, making, and life.*
+*This blog is a continuous experiment in web technologies and personal expression. Expect occasional technical deep-dives alongside random musings about code, the maker space, and life.*

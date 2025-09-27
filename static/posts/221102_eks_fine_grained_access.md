@@ -10,14 +10,14 @@ published: true
 
 ---
 
-At my company, where I am part of the SRE team, we are using [EKS](https://aws.amazon.com/eks/) (Amazon's managed Kubernetes service) to run our applications and services.  
+At my company, where I am part of the SRE team, we are using [EKS](https://aws.amazon.com/eks/) (Amazon's managed Kubernetes service) to run our applications and services.
 We also use it to deploy those applications and services and increasingly serverless stacks with cloud formation or terraform.
 
 But how do we keep our systems secure and stable while allowing the dev teams to build, deploy, monitor and debug their applications as they see fit?
 
 Kubernetes has the concept of service accounts. these are k8s resources that allow other k8s resources like pods for instance to interact with k8s and external services.
 
-EKS allows you to bind those service accounts to IAM Roles allowing fine-grained control on what AWS Services a k8s resource can interact with.  
+EKS allows you to bind those service accounts to IAM Roles allowing fine-grained control on what AWS Services a k8s resource can interact with.
 This is possible as EKS can authenticate by using an [OIDC Provider](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html) (follow the link to see how that connects Service accounts and IAM Roles.)
 
 For us, this means we can give development teams the possibility to deploy their k8s deployments, cloud formation stacks and big data jobs through CI/CD pipelines in their namespaces without having to give them extensive access to the AWS Console.

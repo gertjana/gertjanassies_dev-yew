@@ -83,13 +83,13 @@ You can see we only call ourselves as the last statement, yeah, we're tail call 
 Then all its left is calculating the average of the deltas and multiply it with the number of days from the last measurement to the 31st of December and we are there
 
 ```bash
-~>./van_moofing trend 2020  
-With a average of 4.33 km a day and 13 days till the end of the year,  
-you will probably cycle another 56.0 km in 2020 for a grand total of 10163.0 km  
+~>./van_moofing trend 2020
+With a average of 4.33 km a day and 13 days till the end of the year,
+you will probably cycle another 56.0 km in 2020 for a grand total of 10163.0 km
 
 ```
 
-So I did not reach my goal of 4000 km in 2020 (12.000 km total).  
+So I did not reach my goal of 4000 km in 2020 (12.000 km total).
 The fact that I worked from home since march due to Covid19 might have something to do with that.
 
 BTW: I used the excellent [ex\_cli](https://hex.pm/packages/ex_cli) library for creating a command-line app, with argument parsing

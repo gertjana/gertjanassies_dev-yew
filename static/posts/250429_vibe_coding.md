@@ -47,7 +47,7 @@ It does make mistakes though and n
 
 So in conclusion, AI will not replace developers, but it will make them more productive. It will also make it easier for non-developers to create applications, but they still will need to know what they want and how to ask for it, and understand basic development principles like version control, testing, etc. and ba able to judge architectual decisions, data structures used etc.
 
-I haven't ran into any hallucations, but maybe that's because I kept my requests small and consise. but on more then one occasion it got into an infinite loop, for instance adding the same dependency over and over again. 
+I haven't ran into any hallucations, but maybe that's because I kept my requests small and consise. but on more then one occasion it got into an infinite loop, for instance adding the same dependency over and over again.
 
 It also did not put a newline at the end of newly created files, and only did it after I asked it to remember to do that always.
 

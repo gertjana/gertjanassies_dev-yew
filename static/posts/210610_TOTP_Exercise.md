@@ -18,7 +18,7 @@ Especially when you are working with Serverless applications on AWS. I work a lo
 
 As an exercise, I wanted to see if I could get those codes visible without having to resort to the Google Authenticator app.
 
-What if I could have that code show up in the touch bar on my mac.  
+What if I could have that code show up in the touch bar on my mac.
 I know, I know MFA needs to be another device! so a disclaimer:
 
 > What is described below will lower the security of your system and your accounts: do so at your own risk!
@@ -48,9 +48,9 @@ HOTP uses a hash algorithm to create a digest from the secret and a counter) TOT
 Now Python has an [OTP library](https://github.com/pyauth/pyotp) that can create the MFA code from that secret.
 
 ```python
-#!/usr/bin/env python3import pyotp  
-import syssecret = sys.argv\[1\]  
-totp = pyotp.TOTP(secret)  
+#!/usr/bin/env python3import pyotp
+import syssecret = sys.argv\[1\]
+totp = pyotp.TOTP(secret)
 print(totp.now())
 ```
 
@@ -65,9 +65,9 @@ security add-generic-password -a \[account\] -s totp-exercise -w \[secret\]
 and retrieve it again in a bash script
 
 ```bash
-#!/bin/bash  
-me=\`whoami\`  
-secret=\`security find-generic-password -a $me -s totp-exercise -w\`  
+#!/bin/bash
+me=\`whoami\`
+secret=\`security find-generic-password -a $me -s totp-exercise -w\`
 echo \`python3 \[path\]/get\_code.py $secret\`
 ```
 
@@ -77,15 +77,15 @@ In BetterTouchTool you can create a button (widget) and then run an AppleScript 
 
 so when starting it It will run this AppleScript: it will execute the script and set the text property with the result to have it shown as the button text
 
-```applescript  
-set code to do shell script "/Users/\[account\]/btt\_scripts/code\_aws.sh"  
+```applescript
+set code to do shell script "/Users/\[account\]/btt\_scripts/code\_aws.sh"
 return "{\\"text\\":\\"" & code & "\\"}"
 ```
 
 when pressed it gets the latest code again but now put the code on the clipboard
 
 ```applescript
-set code to do shell script "/Users/\[account\]/btt\_scripts/code\_aws.sh"  
+set code to do shell script "/Users/\[account\]/btt\_scripts/code\_aws.sh"
 set the clipboard to code as text
 ```
 
@@ -93,5 +93,5 @@ To conclude with the pytotp library it is trivial to build your own google authe
 
 Now that I've "proofed the concept" I will remove it again!
 
-And focus on getting this to run on an embedded device, for instance on an [M5 Stack](https://m5stack.com/) which has an ESP32 controller and a screen. although this will probably mean I have to port the python library to C, as I haven't found any libraries that work with the AWS secret, just some abandoned projects that tried to do the same.  
+And focus on getting this to run on an embedded device, for instance on an [M5 Stack](https://m5stack.com/) which has an ESP32 controller and a screen. although this will probably mean I have to port the python library to C, as I haven't found any libraries that work with the AWS secret, just some abandoned projects that tried to do the same.
 But that's another story

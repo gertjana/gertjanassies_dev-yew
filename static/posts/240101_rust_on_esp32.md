@@ -1,5 +1,5 @@
 ---
-title: Rust on ESP32 
+title: Rust on ESP32
 author: Gertjan Assies
 date: "2024-01-04"
 category: code, make
@@ -17,7 +17,7 @@ summary: "Creating applications for ESP32 microcontrollers with the power of the
 >  * Part 1: [A Proof of Concept](/blog/240101_rust_on_esp32) (this article)
 >  * Part 2: [A minimal EV Charger hardware setup](/blog/240125_rust_on_esp32_2_hardware)
 >  * Part 3: Network and Charger to backoffice communication (Wifi/ MQTT / OCPP)
->  * Part 4: Optional: Charger to Car communication (Mode2) 
+>  * Part 4: Optional: Charger to Car communication (Mode2)
 
 For the last couple of months, I've been learning myself how to program in [rust](https://rustlang.org)
 
@@ -156,12 +156,12 @@ and you want to access that from within the thread, the compiler will complain a
 ```rust
 let mut charger = Charger{id: "1", state: "Available"}
 
-thread:spawn(move || { 
+thread:spawn(move || {
     println!("Charger from thread: {:?}", charger);
     loop {
         charger.state = "Charging";
         // sleep a bit
-    }    
+    }
 });
 
 println!("Charger from main: {:?}", charger);
@@ -178,12 +178,12 @@ So to get the above working:
 let org_charger: Arc<Mutex<Charger>> = Arc::new(Mutex::new(Charger{id: "1", state: "Available"}));
 
 let charger = org_charger.clone();
-thread:spawn(move || { 
+thread:spawn(move || {
     println!("Charger from thread: {:?}", charger);
     loop {
         charger.state = "Charging";
         // sleep a bit
-    }    
+    }
 });
 
 let charger = org_charger.clone();
@@ -257,7 +257,7 @@ loop {
     button.enable_interrupt()?;
     notification.wait(esp_idf_svc::hal::delay::BLOCK); // code blocks until button interrupts
     println!("Button was pressed and released");
-}            
+}
 ```
 
 We do this in a separate thread so it won't block the rest

@@ -37,10 +37,10 @@ Van Moof no longer has a phone number to call, only a chat option in the website
 
 A month later, same problem, errorcodes indicating battery issues. again 3 weeks without a bike. I found out after the second repair they put a second hand refurbished battery in. which seemed odd for a bike that is still under warranty.
 
-But at that point I had already made the decision to sell the bike once I got it back.  
+But at that point I had already made the decision to sell the bike once I got it back.
 Luckily the bikes are so popular, people were overbidding each other so I could sell it close to the buying price.
 
-I now ride a bike that has similar performance for a similar price, but it's a more established brand with better proven technology.  
+I now ride a bike that has similar performance for a similar price, but it's a more established brand with better proven technology.
 I do miss the power-boost button though.
 
 I think the lesson to learn here is that you can have a great brand, great market strategy and a friendly costumer service but if the quality is not there, in the end that doesn't matter anymore as you would have lost those customers.

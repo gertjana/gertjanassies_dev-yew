@@ -7,7 +7,7 @@ tags: sveltekit, markdown, typescript, mermaid, mdsvex
 category: code
 image: "/static/images/new_blog_top.jpg"
 image_attribution: 'Courtesy of <a href="https://unsplash.com/s/photos/jess-bailey">Jess Bailey</a> on <a href="https://unsplash.com/">Unsplash</a>'
-published: true 
+published: true
 
 ---
 
@@ -48,7 +48,7 @@ This is my personal space where I talk about technology, coding, the maker space
 
 ## Featured blogs
 
-<Posts tag="featured" size=3 />  
+<Posts tag="featured" size=3 />
 
 ## todo
 
@@ -108,7 +108,7 @@ The `+layout.svelte` gets wrapped around all other pages.
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <svelte:head>
-    <title>gertjan.assies.dev</title> 
+    <title>gertjan.assies.dev</title>
 </svelte:head>
 
 <Nav />
@@ -151,7 +151,7 @@ so here's some code that gets the list of posts in this blog
     export type MetaData = {
         title: number;
         summary: string;
-        date: string;   
+        date: string;
         author: string;
         tags: string;
         category: string;
@@ -172,7 +172,7 @@ so here's some code that gets the list of posts in this blog
 
 ```
 
-The meta.glob() function loads and pre-processes all the *.md files, and returns the path to the file and a globEntry which contains the parsed frontmatter metadata,  
+The meta.glob() function loads and pre-processes all the *.md files, and returns the path to the file and a globEntry which contains the parsed frontmatter metadata,
 
 I then get the slug from the filepath, so I can link to the post itself.
 

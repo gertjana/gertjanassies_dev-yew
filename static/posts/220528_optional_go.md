@@ -114,7 +114,7 @@ Unfortunately I couldn't get the AndThen to work with different input and result
 
 Here I come to the conclusion that the chainable AndThen functionality is actually useful. especially when it's possible to use different types for in- and output.
 
-But I'm also coming to the conclusion, that implementing a pure functional library in Go is maybe not a good idea, as the language is not really suited for that. and that's fine. go learn yourself a bit of Haskell if you want that.  
+But I'm also coming to the conclusion, that implementing a pure functional library in Go is maybe not a good idea, as the language is not really suited for that. and that's fine. go learn yourself a bit of Haskell if you want that.
 The number of abandoned 'experiments' I found on public repo's also attested to this
 
 All the code used is in this repo: [https://gitlab.com/gertjana/optional-go/-/blob/main/cmd/optional/optional.go](https://gitlab.com/gertjana/optional-go/-/blob/main/cmd/optional/optional.go)

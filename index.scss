@@ -1,3 +1,27 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+/* Import Prism CSS for syntax highlighting */
+@import url('/static/styles/prism-one-light.css');
+
+@import url('/static/styles/color-palette.css');
+
+@font-face {
+  font-family: 'FiraCode';
+  src: url('static/fonts/FiraCode-VF.woff2') format('woff2-variations'),
+    url('static/fonts/FiraCode-VF.woff') format('woff-variations'),
+    url('static/fonts/FiraCode.ttf') format('truetype');
+  font-weight: 300 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RedHatText';
+  src: url('static/fonts/RedHatText-VF.ttf') format('truetype');
+  font-weight: 300 700;
+  font-style: normal;
+}
+  
 html,
 body {
   height: 100%;
@@ -890,25 +914,3 @@ footer {
   }
 }
 
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap');
-
-/* Import Prism CSS for syntax highlighting */
-@import url('/static/styles/prism-one-light.css');
-
-@font-face {
-  font-family: 'FiraCode';
-  src: url('static/fonts/FiraCode-VF.woff2') format('woff2-variations'),
-    url('static/fonts/FiraCode-VF.woff') format('woff-variations'),
-    url('static/fonts/FiraCode.ttf') format('truetype');
-  font-weight: 300 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'RedHatText';
-  src: url('static/fonts/RedHatText-VF.ttf') format('truetype');
-  font-weight: 300 700;
-  font-style: normal;
-}
-  

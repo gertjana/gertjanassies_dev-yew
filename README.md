@@ -1,75 +1,91 @@
-# Yew Trunk Template
+# Personal Blog - Yew & WASM Edition
 
-This is a fairly minimal template for a Yew app that's built with [Trunk].
+This is my personal blog built with [Yew](https://yew.rs/) and compiled to WebAssembly (WASM) using [Trunk](https://trunkrs.dev/). It's both a platform for sharing my thoughts on technology, coding, maker projects, and life, as well as a playground for experimenting with new web technologies.
 
-## Usage
+## About This Project
 
-For a more thorough explanation of Trunk and its features, please head over to the [repository][trunk].
+This blog serves dual purposes:
+- **Personal Space**: Where I share insights about technology, programming tutorials, maker projects, and random thoughts
+- **Tech Exploration**: A testing ground for new frameworks and approaches - in this case, diving deep into Rust's web ecosystem with Yew and WASM
 
-### Installation
+## Why Yew & WASM?
 
-If you don't already have it installed, it's time to install Rust: <https://www.rust-lang.org/tools/install>.
-The rest of this guide assumes a typical Rust installation which contains both `rustup` and Cargo.
+I use this blog to experiment with cutting-edge web technologies. This iteration explores:
+- **Yew Framework**: Rust's component-based web framework 
+- **WebAssembly**: Running Rust code in the browser with near-native performance
+- **Modern Web Patterns**: Single-page applications, component architecture, and build-time optimizations
 
-To compile Rust to WASM, we need to have the `wasm32-unknown-unknown` target installed.
-If you don't already have it, install it with the following command:
+## Features
 
-```bash
-rustup target add wasm32-unknown-unknown
+- **📝 Markdown-based Content**: All posts written in Markdown with YAML frontmatter
+- **🎨 Syntax Highlighting**: Custom Prism.js integration for code blocks
+- **🏗️ Build-time Optimization**: Automatic post discovery during compilation
+- **📱 Responsive Design**: Mobile-first design with clean typography
+- **🔍 Content Filtering**: Filter posts by categories, tags, and featured status
+- **⚡ Fast Performance**: WASM-compiled Rust for optimal performance
+
+## Architecture
+
+```
+src/
+├── app.rs              # Main app and routing
+├── components/         # Modular components
+│   ├── header.rs       # Navigation header
+│   ├── footer.rs       # Site footer
+│   ├── homepage.rs     # Homepage with featured posts
+│   ├── blogpage.rs     # Blog archive page
+│   ├── aboutpage.rs    # About page
+│   ├── notfoundpage.rs # 404 error page
+│   └── posts.rs        # Post listing and individual post views
+└── main.rs             # Application entry point
+
+static/
+├── posts/              # Markdown blog posts
+├── images/             # Post images and assets
+└── styles/             # Additional CSS/themes
 ```
 
-Now that we have our basics covered, it's time to install the star of the show: [Trunk].
-Simply run the following command to install it:
+## Getting Started
+
+### Prerequisites
+
+1. Install Rust: https://rustup.rs/
+2. Add WASM target: `rustup target add wasm32-unknown-unknown`
+3. Install Trunk: `cargo install trunk wasm-bindgen-cli`
+
+### Development
 
 ```bash
-cargo install trunk wasm-bindgen-cli
-```
-
-That's it, we're done!
-
-### Running
-
-```bash
+# Start development server with hot reload
 trunk serve
-```
 
-Rebuilds the app whenever a change is detected and runs a local server to host it.
-
-There's also the `trunk watch` command which does the same thing but without hosting it.
-
-### Release
-
-```bash
+# Build for production
 trunk build --release
+
+# Run tests
+cargo test
 ```
 
-This builds the app in release mode similar to `cargo build --release`.
-You can also pass the `--release` flag to `trunk serve` if you need to get every last drop of performance.
+### Adding Content
 
-Unless overwritten, the output will be located in the `dist` directory.
+1. Create a new `.md` file in `static/posts/` with the format: `YYMMDD_post_title.md`
+2. Add YAML frontmatter with title, date, tags, etc.
+3. Write your content in Markdown
+4. Rebuild - posts are automatically discovered at compile time!
 
-## Using this template
+## Technical Highlights
 
-There are a few things you have to adjust when adopting this template.
-
-### Remove example code
-
-The code in [src/main.rs](src/main.rs) specific to the example is limited to only the `view` method.
-There is, however, a fair bit of Sass in [index.scss](index.scss) you can remove.
-
-### Update metadata
-
-Update the `version`, `description` and `repository` fields in the [Cargo.toml](Cargo.toml) file.
-The [index.html](index.html) file also contains a `<title>` tag that needs updating.
+- **Component Architecture**: Clean separation with individual files for each page component
+- **Compile-time Post Discovery**: Build script automatically finds and indexes all blog posts
+- **Custom Syntax Highlighting**: Tailored Prism.js implementation optimized for WASM
+- **Responsive Typography**: Roboto fonts for headers, FiraCode for code blocks
+- **Modern CSS**: Flexbox/Grid layouts with mobile-first responsive design
 
 
-Finally, you should update this very `README` file to be about your app.
+## License
 
-### License
+MIT
 
-The template ships with both the Apache and MIT license.
-If you don't want to have your app dual licensed, just remove one (or both) of the files and update the `license` field in `Cargo.toml`.
+---
 
-There are two empty spaces in the MIT license you need to fill out: `` and `Gertjan Assies <gertjan.assies@gmail.com>`.
-
-[trunk]: https://github.com/thedodd/trunk
+*This blog is a continuous experiment in web technologies and personal expression. Expect occasional technical deep-dives alongside random musings about code, making, and life.*

@@ -1,6 +1,6 @@
+use crate::app::Route;
 use yew::prelude::*;
 use yew_router::prelude::*;
-use crate::app::Route;
 
 #[function_component(Header)]
 pub fn header() -> Html {
@@ -30,15 +30,3 @@ pub fn header() -> Html {
         </header>
     }
 }
-
-#[function_component(Footer)]
-pub fn footer() -> Html {
-    html! {
-        <footer>
-        <div class="footer">
-            <p>{ "© 2024 My Blog too" }</p>
-        </div>
-        </footer>
-    }
-}
-

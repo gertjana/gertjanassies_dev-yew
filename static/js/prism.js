@@ -5,16 +5,13 @@
     var Prism = {
         languages: {},
         highlightAll: function() {
-            console.log('Prism: Starting highlightAll');
             var elements = document.querySelectorAll('code[class*="language-"], pre[class*="language-"]');
-            console.log('Prism: Found', elements.length, 'code elements');
             for (var i = 0; i < elements.length; i++) {
                 Prism.highlightElement(elements[i]);
             }
         },
         highlightElement: function(element) {
             var language = getLanguage(element);
-            console.log('Prism: Highlighting element with language:', language);
             
             var code = element.textContent;
             var highlighted = Prism.highlight(code, language);
@@ -143,7 +140,6 @@
 
     // Highlight function that can be called repeatedly
     function highlightCode() {
-        console.log('Highlighting code blocks...');
         setTimeout(function() {
             Prism.highlightAll();
         }, 100);
@@ -174,7 +170,6 @@
         });
         
         if (hasNewCode) {
-            console.log('New code blocks detected, re-highlighting...');
             highlightCode();
         }
     });

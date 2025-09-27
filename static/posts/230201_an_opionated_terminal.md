@@ -87,7 +87,7 @@ end
 
 In the end it looks like this:
 
-![terminal screenshot](/images/an_opinionated_terminal_1.png)
+![terminal screenshot](/static/images/an_opinionated_terminal_1.png)
 
 Hopefully I showed you some things, that might make your commandline experience a bit more pleasurable.
 

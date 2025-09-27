@@ -40,7 +40,7 @@ Therefore I will focus on the higher level `std` approach which allows the use o
 
 The application model for the `std` mode look like this:
 
-<Lightbox><img alt="Application Model" src="/images/application_model_light.png" style="float:left" /></Lightbox>
+<Lightbox><img alt="Application Model" src="/static/images/application_model_light.png" style="float:left" /></Lightbox>
 
 The following libraries are made available
 
@@ -72,7 +72,7 @@ As my daily work is all about allowing EV Drivers to charge their cars, I've dec
 
 For this I need to control GPIO (General Purpose Input Output) Pins to enable charging (relay), lock the cable (solenoid), display the charger state (multicolor led) and communicate to a backend (MQTT / IoT)
 
-<Lightbox><img alt="Application Model" src="/images/stamp_c3u_01.png" style="width:300px;float:right;" /></Lightbox>
+<Lightbox><img alt="Application Model" src="/static/images/stamp_c3u_01.png" style="width:300px;float:right;" /></Lightbox>
 
 ### hardware
 

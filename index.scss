@@ -5,7 +5,13 @@ body {
 }
 
 body {
-  font-family: 'RedHatText', monospace;
+  font-family: 'FiraCode', monospace;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+  margin-top: 0;
 }
 
 header {
@@ -74,6 +80,297 @@ article:not(.post-list-item):not(.post-card) {
   font-size: 1.1em;
 }
 
+/* Individual Post View Styling */
+.post-view-container {
+  width: 100%;
+  margin-bottom: 2em;
+}
+
+.post-view-title {
+  font-size: 2.5em;
+  line-height: 1.2;
+  margin: 0 0 0.5em 0;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5em;
+}
+
+.post-view-meta {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 1em;
+  font-size: 0.9em;
+  color: #666;
+  align-items: center;
+}
+
+.post-view-meta .post-date {
+  font-weight: 600;
+  color: #333;
+}
+
+.post-view-meta .post-author {
+  color: #555;
+}
+
+.post-view-meta .featured-badge {
+  background: #ff6b35;
+  color: white;
+  padding: 0.3em 0.6em;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.post-view-taxonomy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-bottom: 1.5em;
+  align-items: center;
+}
+
+.post-view-taxonomy .category {
+  background: #e3f2fd;
+  color: #1565c0;
+  padding: 0.3em 0.6em;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: 500;
+  border: 1px solid #bbdefb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.post-view-taxonomy .category:hover {
+  background: #bbdefb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(21, 101, 192, 0.2);
+}
+
+.post-view-taxonomy .tag {
+  background: #f1f8e9;
+  border: 1px solid #c8e6c9;
+  color: #2e7d32;
+  padding: 0.3em 0.6em;
+  border-radius: 4px;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.post-view-taxonomy .tag:hover {
+  background: #dcedc8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(46, 125, 50, 0.2);
+}
+
+.post-view-summary {
+  font-size: 1.1em;
+  color: #555;
+  font-style: italic;
+  margin-bottom: 2em;
+  line-height: 1.6;
+}
+
+.post-view-content {
+  position: relative;
+}
+
+.post-view-featured-image {
+  float: right;
+  width: 33.33%;
+  margin: 0 0 1.5em 2em;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.post-markdown-content {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.post-markdown-content h1,
+.post-markdown-content h2,
+.post-markdown-content h3,
+.post-markdown-content h4,
+.post-markdown-content h5,
+.post-markdown-content h6 {
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+.post-markdown-content h1 {
+  font-size: 2em;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5em;
+}
+
+.post-markdown-content h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.3em;
+}
+
+.post-markdown-content h3 {
+  font-size: 1.3em;
+}
+
+.post-markdown-content p {
+  margin: 1em 0;
+  line-height: 1.7;
+}
+
+.post-markdown-content ul,
+.post-markdown-content ol {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.post-markdown-content li {
+  margin: 0.5em 0;
+  line-height: 1.6;
+}
+
+.post-markdown-content blockquote {
+  margin: 1.5em 0;
+  padding: 1em 1.5em;
+  background: #f8f9fa;
+  border-left: 4px solid #007bff;
+  font-style: italic;
+}
+
+.post-markdown-content code:not([class*="language-"]) {
+  background: #f1f3f4;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: 'FiraCode', monospace;
+  font-size: 0.9em;
+}
+
+.post-markdown-content pre {
+  background: #f8f9fa;
+  padding: 1.5em;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1.5em 0;
+  font-family: 'FiraCode', monospace;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.post-markdown-content pre code {
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Prism syntax highlighting overrides */
+.post-markdown-content pre[class*="language-"] {
+  background: var(--prism-background, #f8f9fa);
+  border: 1px solid #e1e4e8;
+}
+
+.post-markdown-content code[class*="language-"] {
+  font-family: 'FiraCode', monospace;
+}
+
+/* Basic token styling (fallback if Prism CSS doesn't load) */
+.token.comment { color: #6a737d; }
+.token.string { color: #032f62; }
+.token.keyword { color: #d73a49; font-weight: bold; }
+.token.function { color: #6f42c1; }
+.token.number { color: #005cc5; }
+.token.operator { color: #d73a49; }
+.token.punctuation { color: #24292e; }
+.token.macro { color: #e36209; }
+.token.attribute { color: #6f42c1; }
+.token.decorator { color: #6f42c1; }
+
+.post-markdown-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5em 0;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.post-markdown-content a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.post-markdown-content a:hover {
+  text-decoration: underline;
+}
+
+.post-markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+}
+
+.post-markdown-content th,
+.post-markdown-content td {
+  padding: 0.8em;
+  border: 1px solid #dee2e6;
+  text-align: left;
+}
+
+.post-markdown-content th {
+  background: #f8f9fa;
+  font-weight: 600;
+}
+
+.post-markdown-content hr {
+  margin: 2em 0;
+  border: none;
+  border-top: 2px solid #eee;
+}
+
+/* Responsive design for individual post view */
+@media (max-width: 768px) {
+  .post-view-title {
+    font-size: 2em;
+  }
+  
+  .post-view-featured-image {
+    float: none;
+    width: 100%;
+    max-width: none;
+    margin: 0 0 1.5em 0;
+  }
+  
+  .post-view-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5em;
+  }
+  
+  .posts-container {
+    width: 95%;
+    padding: 0.5em;
+  }
+  
+  .home-header, .blog-header {
+    width: 95%;
+    padding: 1em 0.5em 0 0.5em;
+  }
+  
+  .home-header h1, .blog-header h1 {
+    font-size: 2.2em;
+  }
+  
+  .home-header p, .blog-header p {
+    font-size: 1.1em;
+  }
+}
+
 .loading, .error {
   text-align: center;
   padding: 2em;
@@ -84,10 +381,37 @@ article:not(.post-list-item):not(.post-card) {
   color: #d00;
 }
 
+/* Page Header Styling */
+.home-page, .blog-page {
+  width: 100%;
+}
+
+.home-header, .blog-header {
+  width: 80%;
+  margin: 0 auto 2em auto;
+  padding: 2em 1em 0 1em;
+  text-align: center;
+}
+
+.home-header h1, .blog-header h1 {
+  font-size: 3em;
+  margin: 0 0 0.5em 0;
+  line-height: 1.2;
+  color: #333;
+}
+
+.home-header p, .blog-header p {
+  font-size: 1.2em;
+  line-height: 1.6;
+  color: #666;
+  // max-width: 1200px;
+  margin: 0 auto;
+}
+
 /* Posts List Styling */
 .posts-container {
   width: 80%;
-  margin: 0;
+  margin: 0 auto;
   padding: 1em;
   display: flex;
   flex-direction: column;
@@ -481,6 +805,96 @@ footer {
   }
 }
 
+.header-right nav {
+  float: right;
+  margin-top: 3em;
+  margin-right: 1em;
+  vertical-align: bottom;
+  border-bottom: 1px solid var(--accent-1)
+}
+
+.header-right  nav span {
+  margin-top: 3em;
+  margin-left: 1em;
+  vertical-align: bottom;
+  color: var(--accent-1);
+}
+
+.header-right  nav a {
+  margin-right: 1em;
+  text-decoration-line: none;
+}
+
+/* 404 Page Styling */
+.not-found {
+  width: 80%;
+  margin: 0 auto;
+  padding: 2em 1em;
+}
+
+.not-found-content {
+  display: flex;
+  align-items: center;
+  gap: 3em;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.not-found-image {
+  flex-shrink: 0;
+}
+
+.not-found-image img {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.not-found-text {
+  flex: 4;
+}
+
+.not-found-text h1 {
+  font-size: 2.5em;
+  margin: 0 0 0.5em 0;
+  color: #333;
+  line-height: 1.2;
+}
+
+.not-found-text p {
+  font-size: 1.4em;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive design for 404 page */
+@media (max-width: 768px) {
+  .not-found-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 2em;
+  }
+  
+  .not-found-image img {
+    max-width: 250px;
+  }
+  
+  .not-found-text h1 {
+    font-size: 2em;
+  }
+  
+  .not-found-text p {
+    font-size: 1.2em;
+  }
+}
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+/* Import Prism CSS for syntax highlighting */
+@import url('/static/styles/prism-one-light.css');
 
 @font-face {
   font-family: 'FiraCode';

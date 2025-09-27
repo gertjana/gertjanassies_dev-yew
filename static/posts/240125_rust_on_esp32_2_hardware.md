@@ -33,7 +33,7 @@ A simple as possible charger should:
 
 Putting all this into a schematic it looks something like this:
 
-![Schematic](/images/schematic2.png)
+![Schematic](/static/images/schematic2.png)
 
 ## Managing State
 
@@ -44,7 +44,7 @@ A FSM works as follows:
 
 Whenever something happens (an InputEvent), a cable gets inserted/removed or some form of authentication is provided, a transision is made from one state to the next, resulting in an output event, for instance to tell the charger to lock the cable and start charging.
 
-![FSM](/images/charger_eps32_state_diagram.png)
+![FSM](/static/images/charger_eps32_state_diagram.png)
 
 Every Arrow is a `transition` call with the current `State` and an `InputEvent` to a new `State` with an `OutputEvent`.
 
@@ -98,7 +98,7 @@ So now all it left is a bit of logic to do the transitions whenever an event hap
     }
 ```
 
-<Lightbox><img alt="Application Model" src="/images/pullupresistor.png" style="float:right;margin-left:20px;" /></Lightbox>
+<Lightbox><img alt="Application Model" src="/static/images/pullupresistor.png" style="float:right;margin-left:20px;" /></Lightbox>
 
 The GPIO Port is configured as input with an pull-up resistor with the button connected to ground, meaning whenever the button is pressed, it will connect the input to ground (0) and when released the pull-up resistor will 'pull' it to teh +5V (1) again (creating a Positive Edge (0 -> 1) event).
 
@@ -130,7 +130,7 @@ write!(display, "Hello World");
 
 Here's how it looks on a breadboard, I'm using the button and led that are on the m5 Stamp to simulate the swiping of a card and displaying the charger state, a blue led to simulate the relay and a jumper to simulate the inserting of a cable.
 
-![Breadboard](/images/breadboard.png)
+![Breadboard](/static/images/breadboard.png)
 
 The next article will focus on sending and retrieving OCPP Messages to a backend by configuring the Wifi and MQTT Publisher and Subscriber.
 

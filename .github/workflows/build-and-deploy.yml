@@ -79,6 +79,16 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
+    - name: Make package public
+      run: |
+        gh api --method PATCH \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          /user/packages/container/${{ env.IMAGE_NAME }}/versions/${{ steps.meta.outputs.version }} \
+          -f visibility=public
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Output image details
       run: |
         echo "🚀 Successfully built and pushed:"

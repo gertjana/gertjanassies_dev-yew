@@ -79,12 +79,22 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
+    - name: Get version ID for published image
+      id: version-id
+      run: |
+        VERSION_ID=$(gh api -H "Accept: application/vnd.github+json" \
+          /user/packages/container/${{ env.IMAGE_NAME }}/versions \
+          | jq -r '.[] | select(.metadata.container.tags[]? == "${{ steps.tag.outputs.tag }}") | .id' | head -n1)
+        echo "version_id=$VERSION_ID" >> $GITHUB_OUTPUT
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Make package public
       run: |
         gh api --method PATCH \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
-          /user/packages/container/${{ env.IMAGE_NAME }}/versions/${{ steps.meta.outputs.version }} \
+          /user/packages/container/${{ env.IMAGE_NAME }}/versions/${{ steps.version-id.outputs.version_id }} \
           -f visibility=public
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

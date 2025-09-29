@@ -4,7 +4,7 @@ use wasm_bindgen_futures::spawn_local;
 use web_sys::{console, window};
 use yew::prelude::*;
 
-use super::markdown::{load_markdown_content, markdown_to_html_with_highlighting};
+use super::markdown::{load_markdown_content, render_markdown_to_html};
 
 #[allow(dead_code)]
 #[derive(Properties, PartialEq)]
@@ -493,7 +493,7 @@ pub fn post_view(props: &PostViewProps) -> Html {
 
                     // Render the markdown content as HTML
                     <div class="post-markdown-content">
-                        { Html::from_html_unchecked(AttrValue::from(markdown_to_html_with_highlighting(&post.content))) }
+                        { Html::from_html_unchecked(AttrValue::from(render_markdown_to_html(&post.content))) }
                     </div>
                 </div>
             </div>

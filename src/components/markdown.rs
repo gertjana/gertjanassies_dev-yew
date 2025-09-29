@@ -3,7 +3,6 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::{window, Request, RequestInit, RequestMode, Response};
 
-/// Load markdown content from a URL
 pub async fn load_markdown_content(url: &str) -> Result<String, String> {
     let opts = RequestInit::new();
     opts.set_method("GET");
@@ -47,17 +46,15 @@ fn get_options() -> Options {
     options
 }
 
-/// Render markdown to HTML with basic options (no syntax highlighting)
-pub fn render_markdown_to_html(markdown: &str) -> String {
-    let options = get_options();
-    let parser = Parser::new_ext(markdown, options);
-    let mut html_output = String::new();
-    html::push_html(&mut html_output, parser);
-    html_output
-}
+// pub fn render_markdown_to_html(markdown: &str) -> String {
+//     let options = get_options();
+//     let parser = Parser::new_ext(markdown, options);
+//     let mut html_output = String::new();
+//     html::push_html(&mut html_output, parser);
+//     html_output
+// }
 
-/// Render markdown to HTML with syntax highlighting support for code blocks
-pub fn markdown_to_html_with_highlighting(markdown: &str) -> String {
+pub fn render_markdown_to_html(markdown: &str) -> String {
     let options = get_options();
 
     let parser = Parser::new_ext(markdown, options);

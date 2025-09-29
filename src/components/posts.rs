@@ -1,4 +1,4 @@
-use pulldown_cmark::{html, CodeBlockKind, Event, Parser, Tag, TagEnd};
+use pulldown_cmark::{html, CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use wasm_bindgen::JsCast;
@@ -373,6 +373,39 @@ pub fn post_view(props: &PostViewProps) -> Html {
         });
     }
 
+    // Render KaTeX when post content is loaded
+    {
+        let loading = loading.clone();
+        let post_data = post_data.clone();
+
+        use_effect_with((*loading, (*post_data).clone()), move |_| {
+            if !*loading && post_data.is_some() {
+                // Delay the KaTeX rendering to ensure DOM is updated
+                spawn_local(async {
+                    wasm_bindgen_futures::JsFuture::from(web_sys::js_sys::Promise::new(
+                        &mut |resolve, _| {
+                            web_sys::window()
+                                .unwrap()
+                                .set_timeout_with_callback_and_timeout_and_arguments_0(
+                                    &resolve, 100,
+                                )
+                                .unwrap();
+                        },
+                    ))
+                    .await
+                    .unwrap();
+
+                    // Call the global renderMath function
+                    if web_sys::window().is_some() {
+                        let _ =
+                            web_sys::js_sys::eval("if (window.renderMath) window.renderMath();");
+                    }
+                });
+            }
+            || ()
+        });
+    }
+
     if *loading {
         return html! {
             <div class="posts-container">
@@ -719,7 +752,13 @@ fn parse_post_frontmatter_only(raw_content: &str, slug: &str) -> PostSummary {
 // Simple YAML parser for common frontmatter fields
 // Convert markdown to HTML using pulldown-cmark with syntax highlighting support
 fn markdown_to_html(markdown: &str) -> String {
-    let parser = Parser::new(markdown);
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_STRIKETHROUGH);
+    options.insert(Options::ENABLE_TABLES);
+    options.insert(Options::ENABLE_FOOTNOTES);
+    options.insert(Options::ENABLE_TASKLISTS);
+
+    let parser = Parser::new_ext(markdown, options);
     let mut html_output = String::new();
 
     // Process events and add Prism classes to code blocks

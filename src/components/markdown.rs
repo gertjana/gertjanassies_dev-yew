@@ -38,14 +38,18 @@ pub async fn load_markdown_content(url: &str) -> Result<String, String> {
         .ok_or_else(|| "Response text is not a string".to_string())
 }
 
-/// Render markdown to HTML with basic options (no syntax highlighting)
-pub fn render_markdown_to_html(markdown: &str) -> String {
+fn get_options() -> Options {
     let mut options = Options::empty();
     options.insert(Options::ENABLE_STRIKETHROUGH);
     options.insert(Options::ENABLE_TABLES);
     options.insert(Options::ENABLE_FOOTNOTES);
     options.insert(Options::ENABLE_TASKLISTS);
+    options
+}
 
+/// Render markdown to HTML with basic options (no syntax highlighting)
+pub fn render_markdown_to_html(markdown: &str) -> String {
+    let options = get_options();
     let parser = Parser::new_ext(markdown, options);
     let mut html_output = String::new();
     html::push_html(&mut html_output, parser);
@@ -54,11 +58,7 @@ pub fn render_markdown_to_html(markdown: &str) -> String {
 
 /// Render markdown to HTML with syntax highlighting support for code blocks
 pub fn markdown_to_html_with_highlighting(markdown: &str) -> String {
-    let mut options = Options::empty();
-    options.insert(Options::ENABLE_STRIKETHROUGH);
-    options.insert(Options::ENABLE_TABLES);
-    options.insert(Options::ENABLE_FOOTNOTES);
-    options.insert(Options::ENABLE_TASKLISTS);
+    let options = get_options();
 
     let parser = Parser::new_ext(markdown, options);
     let mut html_output = String::new();

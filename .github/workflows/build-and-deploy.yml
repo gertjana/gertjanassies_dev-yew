@@ -85,3 +85,10 @@ jobs:
         echo "📦 Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
         echo "🏷️  Tags: ${{ steps.meta.outputs.tags }}"
         echo "🔗 Version: ${{ steps.tag.outputs.tag }}"
+
+    - name: Deploy to Render (main branch only)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+      env:
+        RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}

@@ -1,8 +1,7 @@
-use pulldown_cmark::{html, Options, Parser};
-use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
-use web_sys::{window, Request, RequestInit, RequestMode};
 use yew::prelude::*;
+
+use super::markdown::{load_markdown_content, render_markdown_to_html};
 
 #[derive(Properties, PartialEq)]
 pub struct PageProps {
@@ -115,47 +114,4 @@ pub fn page(props: &PageProps) -> Html {
             </div>
         </div>
     }
-}
-
-async fn load_markdown_content(url: &str) -> Result<String, String> {
-    let opts = RequestInit::new();
-    opts.set_method("GET");
-    opts.set_mode(RequestMode::SameOrigin);
-
-    let request =
-        Request::new_with_str_and_init(url, &opts).map_err(|_| "Failed to create request")?;
-
-    let window = window().ok_or("Failed to get window")?;
-
-    let resp_value = wasm_bindgen_futures::JsFuture::from(window.fetch_with_request(&request))
-        .await
-        .map_err(|_| "Failed to fetch")?;
-
-    let resp: web_sys::Response = resp_value
-        .dyn_into()
-        .map_err(|_| "Failed to cast to Response")?;
-
-    if !resp.ok() {
-        return Err(format!("HTTP error: {}", resp.status()));
-    }
-
-    let text = wasm_bindgen_futures::JsFuture::from(resp.text().map_err(|_| "Failed to get text")?)
-        .await
-        .map_err(|_| "Failed to read response text")?;
-
-    text.as_string()
-        .ok_or_else(|| "Response is not a string".to_string())
-}
-
-fn render_markdown_to_html(markdown: &str) -> String {
-    let mut options = Options::empty();
-    options.insert(Options::ENABLE_STRIKETHROUGH);
-    options.insert(Options::ENABLE_TABLES);
-    options.insert(Options::ENABLE_FOOTNOTES);
-    options.insert(Options::ENABLE_TASKLISTS);
-
-    let parser = Parser::new_ext(markdown, options);
-    let mut html_output = String::new();
-    html::push_html(&mut html_output, parser);
-    html_output
 }

@@ -1,10 +1,10 @@
-use pulldown_cmark::{html, CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use wasm_bindgen::JsCast;
-use wasm_bindgen_futures::{spawn_local, JsFuture};
-use web_sys::{console, window, Request, RequestInit, RequestMode, Response};
+use wasm_bindgen_futures::spawn_local;
+use web_sys::{console, window};
 use yew::prelude::*;
+
+use super::markdown::{load_markdown_content, markdown_to_html_with_highlighting};
 
 #[allow(dead_code)]
 #[derive(Properties, PartialEq)]
@@ -493,7 +493,7 @@ pub fn post_view(props: &PostViewProps) -> Html {
 
                     // Render the markdown content as HTML
                     <div class="post-markdown-content">
-                        { Html::from_html_unchecked(AttrValue::from(markdown_to_html(&post.content))) }
+                        { Html::from_html_unchecked(AttrValue::from(markdown_to_html_with_highlighting(&post.content))) }
                     </div>
                 </div>
             </div>
@@ -564,39 +564,7 @@ include!(concat!(env!("OUT_DIR"), "/post_slugs.rs"));
 // Load full post content including markdown body
 pub async fn load_post(slug: &str) -> Result<Post, String> {
     let url = format!("/static/posts/{}.md", slug);
-
-    let opts = RequestInit::new();
-    opts.set_method("GET");
-    opts.set_mode(RequestMode::SameOrigin);
-
-    let request = Request::new_with_str_and_init(&url, &opts)
-        .map_err(|e| format!("Failed to create request: {:?}", e))?;
-
-    let window = web_sys::window().ok_or("No global window exists")?;
-    let resp_value = JsFuture::from(window.fetch_with_request(&request))
-        .await
-        .map_err(|e| format!("Fetch failed: {:?}", e))?;
-
-    let resp: Response = resp_value
-        .dyn_into()
-        .map_err(|e| format!("Failed to cast to Response: {:?}", e))?;
-
-    if !resp.ok() {
-        return Err(format!("HTTP error: {}", resp.status()));
-    }
-
-    let text_promise = resp
-        .text()
-        .map_err(|e| format!("Failed to get text promise: {:?}", e))?;
-
-    let text_value = JsFuture::from(text_promise)
-        .await
-        .map_err(|e| format!("Failed to get text: {:?}", e))?;
-
-    let raw_content = text_value
-        .as_string()
-        .ok_or_else(|| "Response text is not a string".to_string())?;
-
+    let raw_content = load_markdown_content(&url).await?;
     Ok(parse_full_post(&raw_content, slug))
 }
 
@@ -673,39 +641,7 @@ async fn load_all_posts() -> Result<Vec<PostSummary>, String> {
 // Load just the frontmatter from a post (not the full content)
 async fn load_post_frontmatter(slug: &str) -> Result<PostSummary, String> {
     let url = format!("/static/posts/{}.md", slug);
-
-    let opts = RequestInit::new();
-    opts.set_method("GET");
-    opts.set_mode(RequestMode::SameOrigin);
-
-    let request = Request::new_with_str_and_init(&url, &opts)
-        .map_err(|e| format!("Failed to create request: {:?}", e))?;
-
-    let window = web_sys::window().ok_or("No global window exists")?;
-    let resp_value = JsFuture::from(window.fetch_with_request(&request))
-        .await
-        .map_err(|e| format!("Fetch failed: {:?}", e))?;
-
-    let resp: Response = resp_value
-        .dyn_into()
-        .map_err(|e| format!("Failed to cast to Response: {:?}", e))?;
-
-    if !resp.ok() {
-        return Err(format!("HTTP error: {}", resp.status()));
-    }
-
-    let text_promise = resp
-        .text()
-        .map_err(|e| format!("Failed to get text promise: {:?}", e))?;
-
-    let text_value = JsFuture::from(text_promise)
-        .await
-        .map_err(|e| format!("Failed to get text: {:?}", e))?;
-
-    let raw_content = text_value
-        .as_string()
-        .ok_or_else(|| "Response text is not a string".to_string())?;
-
+    let raw_content = load_markdown_content(&url).await?;
     Ok(parse_post_frontmatter_only(&raw_content, slug))
 }
 
@@ -750,48 +686,6 @@ fn parse_post_frontmatter_only(raw_content: &str, slug: &str) -> PostSummary {
 }
 
 // Simple YAML parser for common frontmatter fields
-// Convert markdown to HTML using pulldown-cmark with syntax highlighting support
-fn markdown_to_html(markdown: &str) -> String {
-    let mut options = Options::empty();
-    options.insert(Options::ENABLE_STRIKETHROUGH);
-    options.insert(Options::ENABLE_TABLES);
-    options.insert(Options::ENABLE_FOOTNOTES);
-    options.insert(Options::ENABLE_TASKLISTS);
-
-    let parser = Parser::new_ext(markdown, options);
-    let mut html_output = String::new();
-
-    // Process events and add Prism classes to code blocks
-    let mut events = Vec::new();
-
-    for event in parser {
-        match event {
-            Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(lang))) => {
-                let code_language = if lang.is_empty() {
-                    "text".to_string()
-                } else {
-                    lang.to_string()
-                };
-                events.push(Event::Html(
-                    format!(
-                        r#"<pre class="language-{}"><code class="language-{}">"#,
-                        code_language, code_language
-                    )
-                    .into(),
-                ));
-            }
-            Event::End(TagEnd::CodeBlock) => {
-                events.push(Event::Html("</code></pre>".into()));
-            }
-            _ => {
-                events.push(event);
-            }
-        }
-    }
-
-    html::push_html(&mut html_output, events.into_iter());
-    html_output
-}
 
 fn parse_yaml_frontmatter(yaml_str: &str) -> PostFrontmatter {
     let mut frontmatter = PostFrontmatter::default();

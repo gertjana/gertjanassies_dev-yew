@@ -605,6 +605,7 @@ footer {
   width: 100%;
   padding: 1em;
   text-align: center;
+  border-top: 1px solid var(--accent-2);
 }
 
 /* Posts List Layout */
@@ -947,4 +948,98 @@ footer {
   width: 3em;
   height: 3em;
   display: block;
+}
+
+/* Page Component Styles */
+.page {
+  width: 100%;
+  max-width: 100%;
+}
+
+.page.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+.page.error {
+  text-align: center;
+  padding: 2rem;
+  color: var(--error-color, #e74c3c);
+  background-color: var(--error-bg, #ffeaea);
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.page .markdown-content {
+  margin-bottom: 2rem;
+  text-align: left !important;
+}
+
+.page .markdown-content * {
+  text-align: left !important;
+}
+
+.page .page-children {
+  margin-top: 2rem;
+}
+
+/* Page Specific Styles */
+.about-page,
+.home-page,
+.blog-page {
+  width: 100%;
+  padding: 1rem;
+  text-align: left !important;
+}
+
+.home-page .markdown-content,
+.blog-page .markdown-content {
+  margin-bottom: 2rem;
+}
+
+.home-page .page-children,
+.blog-page .page-children {
+  margin-top: 1rem;
+}
+
+/* Table Styling */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* Responsive tables */
+@media (max-width: 768px) {
+  table {
+    font-size: 0.8rem;
+  }
+
+  table th,
+  table td {
+    padding: 6px 8px;
+  }
 }

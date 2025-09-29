@@ -3,7 +3,7 @@ title: Redis Migration
 author: Gertjan Assies
 date: "2023-10-10"
 category: code
-tags: redis, dragonflydb, tip, featured
+tags: redis, dragonflydb, tip
 published: true
 image: "/static/images/migration.jpg"
 summary: "Migrating from redis to dragonflydb for this blog."

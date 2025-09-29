@@ -89,3 +89,4 @@ MIT
 ---
 
 *This blog is a continuous experiment in web technologies and personal expression. Expect occasional technical deep-dives alongside random musings about code, the maker space, and life.*
+# Automated Deployments Enabled

@@ -7,6 +7,7 @@ pub mod markdown;
 pub mod notfoundpage;
 pub mod onlineplaces;
 pub mod page;
+pub mod page_stats_display;
 pub mod posts;
 
 // Re-export components for easier imports

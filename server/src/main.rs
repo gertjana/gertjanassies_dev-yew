@@ -6,7 +6,7 @@ use axum::{
     Router,
 };
 use clap::Parser;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use std::sync::Arc;
 use tower_http::cors::{Any, CorsLayer};
 use tracing::{info, warn};
@@ -47,7 +47,7 @@ struct StatsQuery {
 #[derive(Deserialize)]
 struct IncrementRequest {
     increment_type: String, // "views", "likes"
-    amount: Option<u64>,
+    _amount: Option<u64>,
 }
 
 #[derive(Deserialize)]

@@ -3,25 +3,13 @@ use redis::{AsyncCommands, Client, RedisResult};
 use serde::{Deserialize, Serialize};
 use std::env;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct PageStats {
     pub slug: String,
     pub reads: u64,
     pub views: u64,
     pub likes: u64,
     pub time: u64,
-}
-
-impl Default for PageStats {
-    fn default() -> Self {
-        Self {
-            slug: String::new(),
-            reads: 0,
-            views: 0,
-            likes: 0,
-            time: 0,
-        }
-    }
 }
 
 impl PageStats {
@@ -37,10 +25,6 @@ impl PageStats {
 
     pub fn increment_views(&mut self) {
         self.views += 1;
-    }
-
-    pub fn increment_reads(&mut self) {
-        self.reads += 1;
     }
 
     pub fn increment_likes(&mut self) {
@@ -77,7 +61,7 @@ impl RedisPageStatsClient {
     /// Expected environment variables:
     /// - REDIS_URL: Redis connection URL
     /// - APP_ENV: Environment prefix (defaults to "dev")
-    pub async fn from_env() -> RedisResult<Self> {
+    pub async fn _from_env() -> RedisResult<Self> {
         let redis_url =
             env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
         let env_prefix = env::var("APP_ENV").unwrap_or_else(|_| "dev".to_string());
@@ -147,18 +131,6 @@ impl RedisPageStatsClient {
         Ok(stats)
     }
 
-    /// Increment the read count for a specific slug
-    pub async fn increment_reads(&self, slug: &str) -> RedisResult<PageStats> {
-        let mut stats = self
-            .get_page_stats(slug)
-            .await?
-            .unwrap_or_else(|| PageStats::new(slug));
-
-        stats.increment_reads();
-        self.set_page_stats(&stats).await?;
-        Ok(stats)
-    }
-
     /// Increment the like count for a specific slug
     pub async fn increment_likes(&self, slug: &str) -> RedisResult<PageStats> {
         let mut stats = self
@@ -216,24 +188,6 @@ impl RedisPageStatsClient {
 
         Ok(all_stats)
     }
-
-    /// Delete page stats for a specific slug
-    pub async fn delete_page_stats(&self, slug: &str) -> RedisResult<bool> {
-        let mut conn = self.get_connection();
-        let key = self.generate_key(slug);
-
-        let deleted: i32 = conn.del(&key).await?;
-        Ok(deleted > 0)
-    }
-
-    /// Check if page stats exist for a specific slug
-    pub async fn exists(&self, slug: &str) -> RedisResult<bool> {
-        let mut conn = self.get_connection();
-        let key = self.generate_key(slug);
-
-        let exists: bool = conn.exists(&key).await?;
-        Ok(exists)
-    }
 }
 
 #[cfg(test)]
@@ -256,9 +210,6 @@ mod tests {
 
         stats.increment_views();
         assert_eq!(stats.views, 1);
-
-        stats.increment_reads();
-        assert_eq!(stats.reads, 1);
 
         stats.increment_likes();
         assert_eq!(stats.likes, 1);

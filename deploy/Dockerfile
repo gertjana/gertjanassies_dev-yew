@@ -4,11 +4,12 @@ FROM rust:1.82-alpine AS rust-builder
 # Install build dependencies for Alpine
 RUN apk add --no-cache musl-dev
 
-WORKDIR /app/server
-COPY server/Cargo.toml server/Cargo.lock ./
-COPY server/src ./src
+WORKDIR /app
+COPY Cargo.toml Cargo.lock ./
+COPY server ./server
+COPY frontend ./frontend
 
-RUN cargo build --release
+RUN cargo build --release --package page-stats-server
 
 # Build stage for frontend (if needed)
 FROM nginx:alpine
@@ -26,7 +27,7 @@ COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
 COPY dist /usr/share/nginx/html
 
 # Copy the Rust server binary
-COPY --from=rust-builder /app/server/target/release/page-stats-server /usr/local/bin/page-stats-server
+COPY --from=rust-builder /app/target/release/page-stats-server /usr/local/bin/page-stats-server
 
 # Create supervisor configuration and directories
 RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor /var/run

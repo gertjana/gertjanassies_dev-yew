@@ -7,7 +7,6 @@ use axum::{
 };
 use clap::Parser;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use std::sync::Arc;
 use tower_http::cors::{Any, CorsLayer};
 use tracing::{info, warn};

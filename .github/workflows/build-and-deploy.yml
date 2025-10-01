@@ -2,7 +2,7 @@ name: Build and Deploy Blog
 
 on:
   push:
-    branches: [ main, deployment ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -11,8 +11,50 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  test-server:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Cache Cargo for server tests
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-server-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-server-
+
+    - name: Test server with Redis
+      run: |
+        cargo test -p page-stats-server
+      env:
+        REDIS_URL: redis://localhost:6379
+
+    - name: Build server binary
+      run: |
+        cargo build --release -p page-stats-server
+
   build-and-push:
     runs-on: ubuntu-latest
+    needs: test-server
     permissions:
       contents: read
       packages: write
@@ -21,23 +63,57 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Verify workspace structure
+      run: |
+        echo "📁 Workspace structure:"
+        ls -la
+        echo "📦 Workspace members:"
+        cargo metadata --format-version 1 | jq -r '.workspace_members[]'
+
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       with:
         targets: wasm32-unknown-unknown
+
+    - name: Cache Cargo registry
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
 
     - name: Install Trunk
       uses: jetli/trunk-action@v0.4.0
       with:
         version: 'latest'
 
-    - name: Build Yew application
-      run: trunk build --release
+    - name: Build workspace (cargo check)
+      run: |
+        echo "🔍 Checking workspace..."
+        cargo check --workspace --verbose
 
-    - name: Extract version from Cargo.toml
+    - name: Test workspace
+      run: |
+        echo "🧪 Testing workspace..."
+        cargo test --workspace --verbose
+
+    - name: Build Yew application
+      run: |
+        echo "🌐 Building frontend with Trunk..."
+        cd frontend
+        trunk build --release
+        echo "✅ Frontend build complete"
+        ls -la ../dist/
+
+    - name: Extract version from frontend Cargo.toml
       id: version
       run: |
-        VERSION=$(grep '^version = ' Cargo.toml | head -n1 | cut -d'"' -f2)
+        VERSION=$(cargo metadata --format-version 1 | jq -r '.packages[] | select(.name == "gertjanassies_dev-yew") | .version')
+        echo "🏷️ Extracted version: $VERSION"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
     - name: Generate git hash

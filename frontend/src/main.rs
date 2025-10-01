@@ -1,5 +1,6 @@
 mod app;
 mod components;
+mod reading_time;
 
 use app::App;
 

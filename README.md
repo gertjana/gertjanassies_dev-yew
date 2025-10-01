@@ -81,6 +81,44 @@ cargo test
 - **Responsive Typography**: Roboto fonts for headers, FiraCode for code blocks
 - **Modern CSS**: Flexbox/Grid layouts with mobile-first responsive design
 
+## Docker Deployment
+
+The blog includes a combined Docker container with both the frontend and a Rust-based API server for page statistics.
+
+### Environment Variables
+
+Configure the Redis backend using these environment variables:
+
+- `REDIS_URL`: Redis connection URL (default: `redis://127.0.0.1:6379`)
+- `APP_ENV`: Environment prefix for Redis keys (default: `production`)
+- `PAGE_STATS_PORT`: Internal API server port (default: `3001`)
+- `PAGE_STATS_HOST`: Internal API server host (default: `127.0.0.1`)
+
+### Quick Start with Docker Compose
+
+```bash
+# Build the image
+trunk build --release
+docker build -f deploy/Dockerfile -t gertjanassies-blog .
+
+# Run with Redis
+docker-compose up
+```
+
+### Manual Docker Run
+
+```bash
+# Basic usage
+docker run -p 80:80 gertjanassies-blog
+
+# With external Redis
+docker run -p 80:80 \
+  -e REDIS_URL=redis://my-redis:6379 \
+  -e APP_ENV=production \
+  gertjanassies-blog
+```
+
+See `deploy/ENV_VARIABLES.md` for detailed configuration options.
 
 ## License
 

@@ -2,6 +2,8 @@ use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;
 
 use super::markdown::{load_markdown_content, render_markdown_to_html};
+use super::page_stats_display::PageStatsDisplay;
+use crate::reading_time::calculate_reading_time;
 
 #[derive(Properties, PartialEq)]
 pub struct PageProps {
@@ -112,6 +114,8 @@ pub fn page(props: &PageProps) -> Html {
             <div class="page-children">
                 {props.children.clone()}
             </div>
+            // Add page stats display at the bottom
+            <PageStatsDisplay slug={props.content.clone()} track_view={true} reading_time_seconds={calculate_reading_time(&markdown_content) as u32} />
         </div>
     }
 }

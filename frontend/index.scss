@@ -1043,3 +1043,77 @@ table tr:hover {
     padding: 6px 8px;
   }
 }
+
+/* Page Stats Display */
+.page-stats {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+  line-height: 1;
+}
+
+.stats-loading,
+.stats-error,
+.stats-placeholder {
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.stat-item {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.stat-separator {
+  color: #adb5bd;
+}
+
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.like-button:hover {
+  background: #f8f9fa;
+  transform: scale(1.1);
+}
+
+.like-button:active {
+  background: #e9ecef;
+  transform: scale(0.95);
+}
+
+.thumbs-up-svg {
+  width: 16px;
+  height: 16px;
+  color: #6c757d;
+  transition: color 0.2s ease;
+}
+
+.like-button:hover .thumbs-up-svg {
+  color: #495057;
+}
+
+/* Responsive adjustments for stats */
+@media (max-width: 768px) {
+  .page-stats {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .stat-separator {
+    display: none;
+  }
+}

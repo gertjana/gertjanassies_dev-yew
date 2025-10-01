@@ -5,6 +5,8 @@ use web_sys::{console, window};
 use yew::prelude::*;
 
 use super::markdown::{load_markdown_content, render_markdown_to_html};
+use super::page_stats_display::PageStatsDisplay;
+use crate::reading_time::calculate_reading_time;
 
 #[allow(dead_code)]
 #[derive(Properties, PartialEq)]
@@ -496,6 +498,9 @@ pub fn post_view(props: &PostViewProps) -> Html {
                         { Html::from_html_unchecked(AttrValue::from(render_markdown_to_html(&post.content))) }
                     </div>
                 </div>
+
+                // Add page stats display at the bottom of the post
+                <PageStatsDisplay slug={AttrValue::from(post.slug.clone())} track_view={true} reading_time_seconds={calculate_reading_time(&post.content) as u32} />
             </div>
         </div>
     }

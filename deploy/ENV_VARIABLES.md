@@ -85,9 +85,9 @@ The container includes a health check endpoint at `/health` that returns `200 OK
 
 ## Redis Data Structure
 
-The application stores page statistics in Redis with keys prefixed by `APP_ENV`:
-- `{APP_ENV}:stats:{slug}` - Contains JSON with views, reads, likes, and time data
+The application stores page statistics in Redis with keys structured as follows:
+- `{APP_ENV}:post:{slug}:page_stats` - Contains JSON with views, reads, likes, and time data
 
 Example with `APP_ENV=production`:
-- `production:stats:home` - Stats for the home page
-- `production:stats:blog-post-slug` - Stats for a blog post
+- `production:post:home:page_stats` - Stats for the home page
+- `production:post:blog-post-slug:page_stats` - Stats for a blog post

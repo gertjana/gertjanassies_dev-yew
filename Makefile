@@ -56,3 +56,7 @@ dev-setup: build-frontend-web docker-up
 # Check workspace
 check:
 	cargo check --workspace
+
+# Validate CI/CD workflow locally
+validate-ci:
+	./scripts/validate-ci.sh

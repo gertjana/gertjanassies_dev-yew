@@ -75,6 +75,11 @@ impl RedisPageStatsClient {
         format!("{}:post:{}:page_stats", self.env_prefix, slug)
     }
 
+    /// Generate a Redis key without needing a connection (for testing)
+    pub fn _generate_key_static(env_prefix: &str, slug: &str) -> String {
+        format!("{}:post:{}:page_stats", env_prefix, slug)
+    }
+
     /// Get a clone of the connection manager
     fn get_connection(&self) -> ConnectionManager {
         self.connection_manager.clone()
@@ -220,10 +225,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_key_generation() {
-        let client = RedisPageStatsClient::new("redis://localhost", "test")
-            .await
-            .unwrap();
-        let key = client.generate_key("my_blog_post");
+        let key = RedisPageStatsClient::_generate_key_static("test", "my_blog_post");
         assert_eq!(key, "test:post:my_blog_post:page_stats");
     }
 

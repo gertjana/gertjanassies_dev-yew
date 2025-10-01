@@ -187,11 +187,15 @@ impl RedisPageStatsClient {
         let mut conn = self.get_connection()?;
         let pattern = format!("{}:post:*:page_stats", self.env_prefix);
 
-        let keys: Vec<String> = conn.keys(&pattern)?;
         let mut all_stats = Vec::new();
+        let iter = redis::cmd("SCAN")
+            .cursor_arg(0)
+            .arg("MATCH")
+            .arg(&pattern)
+            .iter::<String>(&mut conn)?;
 
-        for key in keys {
-            if let Ok(Some(json_string)) = conn.get::<_, Option<String>>(key) {
+        for key in iter {
+            if let Ok(Some(json_string)) = conn.get::<_, Option<String>>(&key) {
                 if let Ok(stats) = serde_json::from_str::<PageStats>(&json_string) {
                     all_stats.push(stats);
                 }

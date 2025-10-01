@@ -1,24 +1,24 @@
 services:
-  # redis:
-  #   image: redis:7-alpine
-  #   ports:
-  #     - "6380:6379"
-  #   command: redis-server --appendonly yes
-  #   volumes:
-  #     - redis_data:/data
-  #   restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
 
   blog:
     image: gertjanassies-combined
     ports:
       - "8080:80"
     environment:
-      - REDIS_URL=redis://localhost:6379
+      - REDIS_URL=redis://redis:6379
       - APP_ENV=development
-    # depends_on:
-    #   - redis
+    depends_on:
+      - redis
     restart: unless-stopped
 
-# volumes:
-#   redis_data:
-#     driver: local
+volumes:
+  redis_data:
+    driver: local

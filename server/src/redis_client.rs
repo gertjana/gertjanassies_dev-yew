@@ -1,4 +1,5 @@
-use redis::{Client, Commands, Connection, RedisResult};
+use redis::aio::ConnectionManager;
+use redis::{AsyncCommands, Client, RedisResult};
 use serde::{Deserialize, Serialize};
 use std::env;
 
@@ -52,7 +53,7 @@ impl PageStats {
 }
 
 pub struct RedisPageStatsClient {
-    client: Client,
+    connection_manager: ConnectionManager,
     env_prefix: String,
 }
 
@@ -62,10 +63,11 @@ impl RedisPageStatsClient {
     /// # Arguments
     /// * `redis_url` - Redis connection URL (e.g., "redis://127.0.0.1:6379")
     /// * `env_prefix` - Environment prefix for keys (e.g., "prod", "dev", "staging")
-    pub fn new(redis_url: &str, env_prefix: &str) -> RedisResult<Self> {
+    pub async fn new(redis_url: &str, env_prefix: &str) -> RedisResult<Self> {
         let client = Client::open(redis_url)?;
+        let connection_manager = ConnectionManager::new(client).await?;
         Ok(Self {
-            client,
+            connection_manager,
             env_prefix: env_prefix.to_string(),
         })
     }
@@ -75,12 +77,12 @@ impl RedisPageStatsClient {
     /// Expected environment variables:
     /// - REDIS_URL: Redis connection URL
     /// - APP_ENV: Environment prefix (defaults to "dev")
-    pub fn from_env() -> RedisResult<Self> {
+    pub async fn from_env() -> RedisResult<Self> {
         let redis_url =
             env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
         let env_prefix = env::var("APP_ENV").unwrap_or_else(|_| "dev".to_string());
 
-        Self::new(&redis_url, &env_prefix)
+        Self::new(&redis_url, &env_prefix).await
     }
 
     /// Generate the Redis key for a given slug
@@ -89,18 +91,18 @@ impl RedisPageStatsClient {
         format!("{}:post:{}:page_stats", self.env_prefix, slug)
     }
 
-    /// Get a connection to Redis
-    fn get_connection(&self) -> RedisResult<Connection> {
-        self.client.get_connection()
+    /// Get a clone of the connection manager
+    fn get_connection(&self) -> ConnectionManager {
+        self.connection_manager.clone()
     }
 
     /// Get page stats for a specific slug
     /// Returns None if the key doesn't exist
     pub async fn get_page_stats(&self, slug: &str) -> RedisResult<Option<PageStats>> {
-        let mut conn = self.get_connection()?;
+        let mut conn = self.get_connection();
         let key = self.generate_key(slug);
 
-        let json_string: Option<String> = conn.get(&key)?;
+        let json_string: Option<String> = conn.get(&key).await?;
 
         match json_string {
             Some(json) => {
@@ -118,7 +120,7 @@ impl RedisPageStatsClient {
 
     /// Set page stats for a specific slug
     pub async fn set_page_stats(&self, stats: &PageStats) -> RedisResult<()> {
-        let mut conn = self.get_connection()?;
+        let mut conn = self.get_connection();
         let key = self.generate_key(&stats.slug);
 
         let json_string = serde_json::to_string(stats).map_err(|e| {
@@ -129,7 +131,7 @@ impl RedisPageStatsClient {
             ))
         })?;
 
-        conn.set::<_, _, ()>(&key, json_string)?;
+        conn.set::<_, _, ()>(&key, json_string).await?;
         Ok(())
     }
 
@@ -184,21 +186,31 @@ impl RedisPageStatsClient {
     /// Get all page stats (useful for analytics)
     /// Returns a vector of all PageStats found in Redis
     pub async fn get_all_page_stats(&self) -> RedisResult<Vec<PageStats>> {
-        let mut conn = self.get_connection()?;
+        let mut conn = self.get_connection();
         let pattern = format!("{}:post:*:page_stats", self.env_prefix);
 
         let mut all_stats = Vec::new();
-        let iter = redis::cmd("SCAN")
-            .cursor_arg(0)
-            .arg("MATCH")
-            .arg(&pattern)
-            .iter::<String>(&mut conn)?;
+        let mut cursor = 0u64;
 
-        for key in iter {
-            if let Ok(Some(json_string)) = conn.get::<_, Option<String>>(&key) {
-                if let Ok(stats) = serde_json::from_str::<PageStats>(&json_string) {
-                    all_stats.push(stats);
+        loop {
+            let (new_cursor, keys): (u64, Vec<String>) = redis::cmd("SCAN")
+                .cursor_arg(cursor)
+                .arg("MATCH")
+                .arg(&pattern)
+                .query_async(&mut conn)
+                .await?;
+
+            for key in keys {
+                if let Ok(Some(json_string)) = conn.get::<_, Option<String>>(&key).await {
+                    if let Ok(stats) = serde_json::from_str::<PageStats>(&json_string) {
+                        all_stats.push(stats);
+                    }
                 }
+            }
+
+            cursor = new_cursor;
+            if cursor == 0 {
+                break;
             }
         }
 
@@ -207,19 +219,19 @@ impl RedisPageStatsClient {
 
     /// Delete page stats for a specific slug
     pub async fn delete_page_stats(&self, slug: &str) -> RedisResult<bool> {
-        let mut conn = self.get_connection()?;
+        let mut conn = self.get_connection();
         let key = self.generate_key(slug);
 
-        let deleted: i32 = conn.del(&key)?;
+        let deleted: i32 = conn.del(&key).await?;
         Ok(deleted > 0)
     }
 
     /// Check if page stats exist for a specific slug
     pub async fn exists(&self, slug: &str) -> RedisResult<bool> {
-        let mut conn = self.get_connection()?;
+        let mut conn = self.get_connection();
         let key = self.generate_key(slug);
 
-        let exists: bool = conn.exists(&key)?;
+        let exists: bool = conn.exists(&key).await?;
         Ok(exists)
     }
 }
@@ -255,9 +267,11 @@ mod tests {
         assert_eq!(stats.time, 30);
     }
 
-    #[test]
-    fn test_key_generation() {
-        let client = RedisPageStatsClient::new("redis://localhost", "test").unwrap();
+    #[tokio::test]
+    async fn test_key_generation() {
+        let client = RedisPageStatsClient::new("redis://localhost", "test")
+            .await
+            .unwrap();
         let key = client.generate_key("my_blog_post");
         assert_eq!(key, "test:post:my_blog_post:page_stats");
     }

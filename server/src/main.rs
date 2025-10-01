@@ -70,6 +70,7 @@ async fn main() -> anyhow::Result<()> {
     // Initialize Redis client
     let redis_client = Arc::new(
         RedisPageStatsClient::new(&args.redis_url, &args.app_env)
+            .await
             .map_err(|e| anyhow::anyhow!("Failed to connect to Redis: {}", e))?,
     );
 

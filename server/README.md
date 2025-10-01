@@ -26,7 +26,7 @@ POST /api/stats/{slug}/increment
 Content-Type: application/json
 
 {
-  "increment_type": "views|reads|likes"
+  "increment_type": "views|likes"
 }
 ```
 

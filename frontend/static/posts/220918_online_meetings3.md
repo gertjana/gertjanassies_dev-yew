@@ -20,8 +20,8 @@ published: true
 In the previous two blogs, I explained the idea and execution of a small device that would allow me to mute/unmute audio/video and raise a hand in video calls with hangouts, zoom or teams.
 Here are the links to both previous articles
 
-Part 1: [All those online meetings - Part 1](/blog/210619_online_meetings)
-Part 2: [All those online meetings - Part 2](/blog/220801_online_meetings2)
+Part 1: [All those online meetings - Part 1](/post/210619_online_meetings)
+Part 2: [All those online meetings - Part 2](/post/220801_online_meetings2)
 
 So it was working, and I was actually using it, but it was just a PCB (printed circuit board) laying on my desk. so I started thinking about creating a case for it. here's a picture of the PCB in its latest revision.
 the Link in the references will take you to this board on Aisler's website.

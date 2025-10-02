@@ -68,7 +68,7 @@ RUN apk add --no-cache ca-certificates
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the built frontend from the frontend-builder stage
-COPY --from=frontend-builder /app/dist /usr/share/nginx/html
+COPY --from=frontend-builder /app/frontend/dist /usr/share/nginx/html
 
 # Copy the Rust server binary from the backend-builder stage
 COPY --from=backend-builder /app/target/release/page-stats-server /usr/local/bin/page-stats-server

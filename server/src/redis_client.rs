@@ -9,6 +9,7 @@ pub struct PageStats {
     pub reads: u64,
     pub views: u64,
     pub likes: u64,
+    /// Estimated reading time in seconds (calculated once based on word count)
     pub time: u64,
 }
 
@@ -31,8 +32,10 @@ impl PageStats {
         self.likes += 1;
     }
 
-    pub fn add_time(&mut self, seconds: u64) {
-        self.time += seconds;
+    pub fn set_reading_time(&mut self, seconds: u64) {
+        if self.time == 0 {
+            self.time = seconds;
+        }
     }
 }
 
@@ -148,14 +151,14 @@ impl RedisPageStatsClient {
         Ok(stats)
     }
 
-    /// Add time spent on a page for a specific slug
-    pub async fn add_time(&self, slug: &str, seconds: u64) -> RedisResult<PageStats> {
+    /// Set reading time for a specific slug (only if not already set)
+    pub async fn set_reading_time(&self, slug: &str, seconds: u64) -> RedisResult<PageStats> {
         let mut stats = self
             .get_page_stats(slug)
             .await?
             .unwrap_or_else(|| PageStats::new(slug));
 
-        stats.add_time(seconds);
+        stats.set_reading_time(seconds);
         self.set_page_stats(&stats).await?;
         Ok(stats)
     }
@@ -219,8 +222,12 @@ mod tests {
         stats.increment_likes();
         assert_eq!(stats.likes, 1);
 
-        stats.add_time(30);
+        stats.set_reading_time(30);
         assert_eq!(stats.time, 30);
+
+        // Test that reading time doesn't get overwritten
+        stats.set_reading_time(60);
+        assert_eq!(stats.time, 30); // Should still be 30
     }
 
     #[tokio::test]

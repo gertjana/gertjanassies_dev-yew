@@ -25,6 +25,8 @@ pub struct PageStatsDisplayProps {
     pub track_view: bool,
     #[prop_or(0)]
     pub reading_time_seconds: u32,
+    #[prop_or(true)]
+    pub published: bool,
 }
 
 #[function_component(PageStatsDisplay)]
@@ -36,6 +38,7 @@ pub fn page_stats_display(props: &PageStatsDisplayProps) -> Html {
     let slug = props.slug.clone();
     let track_view = props.track_view;
     let reading_time_seconds = props.reading_time_seconds;
+    let published = props.published;
 
     // Load and optionally track view on component mount
     {
@@ -45,17 +48,23 @@ pub fn page_stats_display(props: &PageStatsDisplayProps) -> Html {
         let slug = slug.clone();
 
         use_effect_with(
-            (slug.clone(), track_view, reading_time_seconds),
-            move |(slug, track_view, reading_time)| {
+            (slug.clone(), track_view, reading_time_seconds, published),
+            move |(slug, track_view, reading_time, published)| {
                 let stats = stats.clone();
                 let loading = loading.clone();
                 let error = error.clone();
                 let slug = slug.clone();
                 let track_view = *track_view;
                 let reading_time = *reading_time;
+                let published = *published;
 
                 spawn_local(async move {
-                    match load_page_stats_from_server(&slug, track_view, reading_time).await {
+                    // Only calculate reading time for published articles
+                    let reading_time_for_calc = if published { reading_time } else { 0 };
+
+                    match load_page_stats_from_server(&slug, track_view, reading_time_for_calc)
+                        .await
+                    {
                         Ok(page_stats) => {
                             stats.set(Some(page_stats));
                             loading.set(false);
@@ -256,18 +265,96 @@ async fn load_page_stats_from_server(
         }
     };
 
-    // Use the calculated reading time instead of tracked time
-    stats.time = reading_time_seconds as u64;
+    // Check if reading time needs to be calculated and saved
+    if stats.time == 0 && reading_time_seconds > 0 {
+        console::log_1(
+            &format!(
+                "Reading time not yet calculated for '{}', calculating and saving {} seconds",
+                slug, reading_time_seconds
+            )
+            .into(),
+        );
+
+        // Save the calculated reading time to the server
+        if let Ok(updated_stats) = save_reading_time_to_server(slug, reading_time_seconds).await {
+            stats = updated_stats;
+            console::log_1(
+                &format!(
+                    "Successfully saved reading time for '{}': {} seconds",
+                    slug, stats.time
+                )
+                .into(),
+            );
+        } else {
+            // If saving fails, still use the calculated time for display
+            stats.time = reading_time_seconds as u64;
+            console::warn_1(
+                &format!(
+                    "Failed to save reading time for '{}', using calculated time for display only",
+                    slug
+                )
+                .into(),
+            );
+        }
+    }
 
     console::log_1(
         &format!(
-            "Loaded stats for '{}': {} views, {} reads, {} likes, {} seconds reading time",
-            slug, stats.views, stats.reads, stats.likes, reading_time_seconds
+            "Final stats for '{}': {} views, {} reads, {} likes, {} seconds reading time",
+            slug, stats.views, stats.reads, stats.likes, stats.time
         )
         .into(),
     );
 
     Ok(stats)
+}
+
+// Save reading time to the server
+async fn save_reading_time_to_server(
+    slug: &str,
+    reading_time_seconds: u32,
+) -> Result<PageStats, Box<dyn Error>> {
+    let window = web_sys::window().unwrap();
+
+    let time_url = format!("/api/stats/{}/reading-time", slug);
+
+    // Create JSON payload
+    let payload = serde_json::json!({
+        "seconds": reading_time_seconds as u64
+    });
+
+    let opts = RequestInit::new();
+    opts.set_method("POST");
+    opts.set_mode(RequestMode::SameOrigin);
+
+    // Set content type header
+    let headers = web_sys::Headers::new().unwrap();
+    headers.set("Content-Type", "application/json").unwrap();
+    opts.set_headers(&headers);
+
+    // Set body
+    opts.set_body(&wasm_bindgen::JsValue::from_str(&payload.to_string()));
+
+    let request = Request::new_with_str_and_init(&time_url, &opts)
+        .map_err(|e| format!("Failed to create request: {:?}", e))?;
+
+    let resp_value = JsFuture::from(window.fetch_with_request(&request))
+        .await
+        .map_err(|e| format!("Network error: {:?}", e))?;
+
+    let resp: Response = resp_value.dyn_into().unwrap();
+
+    if resp.ok() {
+        let json = JsFuture::from(resp.json().unwrap())
+            .await
+            .map_err(|e| format!("Failed to parse JSON: {:?}", e))?;
+
+        serde_wasm_bindgen::from_value::<PageStats>(json).map_err(|e| -> Box<dyn Error> {
+            format!("Failed to deserialize stats: {:?}", e).into()
+        })
+    } else {
+        Err(format!("Failed to save reading time: HTTP {}", resp.status()).into())
+    }
 }
 
 #[cfg(test)]

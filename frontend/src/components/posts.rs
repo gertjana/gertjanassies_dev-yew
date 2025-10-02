@@ -500,7 +500,7 @@ pub fn post_view(props: &PostViewProps) -> Html {
                 </div>
 
                 // Add page stats display at the bottom of the post
-                <PageStatsDisplay slug={AttrValue::from(post.slug.clone())} track_view={true} reading_time_seconds={calculate_reading_time(&post.content) as u32} />
+                <PageStatsDisplay slug={AttrValue::from(post.slug.clone())} track_view={true} reading_time_seconds={calculate_reading_time(&post.content) as u32} published={post.frontmatter.published} />
             </div>
         </div>
     }

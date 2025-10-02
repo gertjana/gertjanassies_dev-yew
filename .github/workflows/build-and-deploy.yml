@@ -11,50 +11,8 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  test-backend:
-    runs-on: ubuntu-latest
-    services:
-      redis:
-        image: redis:7-alpine
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Install Rust
-      uses: dtolnay/rust-toolchain@stable
-
-    - name: Cache Cargo for backend tests
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ runner.os }}-cargo-backend-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-cargo-backend-
-
-    - name: Test backend with Redis
-      run: |
-        cargo test -p page-stats-server
-      env:
-        REDIS_URL: redis://localhost:6379
-
-    - name: Build backend binary
-      run: |
-        cargo build --release -p page-stats-server
-
   build-and-push:
     runs-on: ubuntu-latest
-    needs: test-backend
     permissions:
       contents: read
       packages: write

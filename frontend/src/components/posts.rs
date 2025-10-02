@@ -3,9 +3,11 @@ use std::collections::HashMap;
 use wasm_bindgen_futures::spawn_local;
 use web_sys::{console, window};
 use yew::prelude::*;
+use yew_router::prelude::*;
 
 use super::markdown::{load_markdown_content, render_markdown_to_html};
 use super::page_stats_display::PageStatsDisplay;
+use crate::app::Route;
 use crate::reading_time::calculate_reading_time;
 
 #[allow(dead_code)]
@@ -221,7 +223,7 @@ pub fn post_card(props: &PostCardProps) -> Html {
 
             <div class="post-card-content">
                 <h2 class="post-title">
-                    <a href={format!("/post/{}", post.slug)}>{ &post.frontmatter.title }</a>
+                    <Link<Route> to={Route::Post { slug: post.slug.clone() }}>{ &post.frontmatter.title }</Link<Route>>
                 </h2>
 
                 <div class="post-meta">
@@ -284,7 +286,7 @@ pub fn post_list_item(props: &PostListItemProps) -> Html {
             <div class="post-content">
                 <div class="post-header">
                     <h2 class="post-title">
-                        <a href={format!("/post/{}", post.slug)}>{ &post.frontmatter.title }</a>
+                        <Link<Route> to={Route::Post { slug: post.slug.clone() }}>{ &post.frontmatter.title }</Link<Route>>
                     </h2>
 
                     // Categories and tags next to the title

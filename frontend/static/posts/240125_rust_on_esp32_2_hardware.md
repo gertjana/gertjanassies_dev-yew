@@ -14,12 +14,12 @@ summary: "Focusing on the minimal hardware needed to build an EV Charger with Ru
 </script>
 
 > This is a series of articles about using Rust to program an ESP32 Microcontroller by building a minimal EV Charger.<br/>
->  * Part 1: [A Proof of Concept](/blog/240101_rust_on_esp32)
->  * Part 2: [A minimal EV Charger hardware setup](/blog/240125_rust_on_esp32_2_hardware) (this article)
+>  * Part 1: [A Proof of Concept](/post/240101_rust_on_esp32)
+>  * Part 2: [A minimal EV Charger hardware setup](/post/240125_rust_on_esp32_2_hardware) (this article)
 >  * Part 3: Network and Charger to backoffice communication (Wifi/ MQTT / OCPP)
 >  * Part 4: Optional: Charger to Car communication (Mode2)
 
-The previous [article](/blog/240101_rust_on_esp32) was about try-ing to get Rust running on a esp32 microcontroller.
+The previous [article](/post/240101_rust_on_esp32) was about try-ing to get Rust running on a esp32 microcontroller.
 
 In there I started to set up as a charger for an Electric Vehicle, lets dive more into that by desiging the hardware.
 

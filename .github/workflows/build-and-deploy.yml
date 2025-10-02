@@ -21,12 +21,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Verify workspace structure
-      run: |
-        echo "📁 Workspace structure:"
-        ls -la
-        echo "📦 Workspace members:"
-        cargo metadata --format-version 1 | jq -r '.workspace_members[]'
 
     - name: Install Rust (for version extraction only)
       uses: dtolnay/rust-toolchain@stable
@@ -35,7 +29,7 @@ jobs:
       id: version
       run: |
         VERSION=$(cargo metadata --format-version 1 | jq -r '.packages[] | select(.name == "gertjanassies_dev-yew") | .version')
-        echo "🏷️ Extracted version: $VERSION"
+        echo "Extracted version: $VERSION"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
     - name: Generate git hash
@@ -79,10 +73,10 @@ jobs:
 
     - name: Output image details
       run: |
-        echo "🚀 Successfully built and pushed:"
-        echo "📦 Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
-        echo "🏷️  Tags: ${{ steps.meta.outputs.tags }}"
-        echo "🔗 Version: ${{ steps.tag.outputs.tag }}"
+        echo "Successfully built and pushed:"
+        echo "Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+        echo "Tags: ${{ steps.meta.outputs.tags }}"
+        echo "Version: ${{ steps.tag.outputs.tag }}"
 
     - name: Deploy to Render (main branch only)
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'

@@ -81,7 +81,7 @@ async fn main() -> anyhow::Result<()> {
         .route("/health", get(health_check))
         .route("/api/stats/:slug", get(get_page_stats))
         .route("/api/stats/:slug/increment", post(increment_stats))
-        .route("/api/stats/:slug/time", post(add_time))
+        .route("/api/stats/:slug/reading-time", post(set_reading_time))
         .route("/api/stats", get(get_all_stats))
         .layer(
             CorsLayer::new()
@@ -170,18 +170,25 @@ async fn increment_stats(
     }
 }
 
-/// Add time spent on a page
-async fn add_time(
+/// Set reading time for a page (only if not already set)
+async fn set_reading_time(
     State(state): State<AppState>,
     Path(slug): Path<String>,
     Json(payload): Json<TimeRequest>,
 ) -> Result<Json<PageStats>, StatusCode> {
-    info!("Adding {} seconds to slug: {}", payload.seconds, slug);
+    info!(
+        "Setting reading time {} seconds for slug: {}",
+        payload.seconds, slug
+    );
 
-    match state.redis_client.add_time(&slug, payload.seconds).await {
+    match state
+        .redis_client
+        .set_reading_time(&slug, payload.seconds)
+        .await
+    {
         Ok(stats) => Ok(Json(stats)),
         Err(e) => {
-            warn!("Failed to add time for {}: {}", slug, e);
+            warn!("Failed to set reading time for {}: {}", slug, e);
             Err(StatusCode::INTERNAL_SERVER_ERROR)
         }
     }

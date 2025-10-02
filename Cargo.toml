@@ -1,9 +1,9 @@
 [workspace]
 members = [
     "frontend",
-    "server",
+    "backend",
 ]
-default-members = ["frontend", "server"]
+default-members = ["frontend", "backend"]
 resolver = "2"
 
 [workspace.dependencies]

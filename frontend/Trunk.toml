@@ -7,3 +7,6 @@ release = false
 dist = "../dist"
 # The public URL from which assets are to be served.
 public_url = "/"
+
+[watch]
+watch = ["src/", "static", "index.html", "index.scss"]

@@ -153,7 +153,9 @@ Here's how the state machine looks:
 [![State Machine](/static/images/charger_state_machine.png)](/static/images/charger_state_machine.png)
 
 And if you're brave, here's the complete architecture, (every green or blue rectangle is an embassy task, all communication between tasks go through channels)
-<a href="/static/images/charger_architecture.png" target="_blank">Architecture Diagram (opens in new tab)</a>
+<a href="/static/images/charger_architecture.png" target="_blank">
+![Architecture](/static/images/charger_architecture.png#small)
+</a>
 
 ## Hardware
 
@@ -187,10 +189,10 @@ You can find all the schematic and PCB files in the kicad subdirectory of the [p
 
 ## Conclusion
 
-It's possible to write safe async code on ESP32 microcontrollers.
-Working within the `no_std` constraints was more manageable than expected, likely because I haven't yet run into more challenging limitations.
+It's possible to write safe async code in rust on ESP32 microcontrollers.
+Working within the `no_std` constraints was more manageable than expected, especially with the help of crates like 'alloc' and 'heapless' which help with alternative ways of allocation where needed.
 
-The Embassy framework represents a significant step forward for embedded Rust development, making async programming accessible while maintaining the safety guarantees Rust is known for. The combination of type safety, memory efficiency, and async capabilities makes it a compelling choice for modern embedded applications.
+The Embassy framework helps me to use the same programming concepts as in normal applications using for instance the Tokio async runtime.
 
 For future articles, I will discuss network communication, setting up Wifi, getting the time from an NTP Server and talking to a backoffice using MQTT and the OCPP Protocol
 

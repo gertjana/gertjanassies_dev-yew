@@ -39,9 +39,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 img#small {
-  max-width: 300px;
-  height: auto;
-  border-radius: 8px;
+  max-width: 300px !important;
 }
 
 header {

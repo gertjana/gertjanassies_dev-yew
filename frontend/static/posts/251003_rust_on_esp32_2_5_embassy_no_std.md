@@ -1,17 +1,13 @@
 ---
 title: Rust on ESP32 part 2.5 - Switching software to Rust no_std and Embassy
 author: Gertjan Assies
-date: "2025-09-26"
+date: "2025-10-03"
 category: code, make
-tags: rust, embedded, esp32, featured, ocpp, mqtt
+tags: rust, embedded, esp32, featured, embassy
 published: true
 image: "/static/images/rust_embassy.png"
 summary: "Rewriting the source code to better fit the ESP32 using no_std Rust and Embassy framework"
 ---
-
-<script lang="ts">
-    import { Lightbox } from 'svelte-lightbox';
-</script>
 
 > This is a series of articles about using Rust to program an ESP32 Microcontroller by building a minimal EV Charger.<br/>
 >  * Part 1: [A Proof of Concept](/post/240101_rust_on_esp32)

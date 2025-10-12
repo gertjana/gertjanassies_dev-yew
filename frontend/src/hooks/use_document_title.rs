@@ -9,6 +9,6 @@ pub fn use_document_title(title: &str) {
         if let Some(document) = window().and_then(|w| w.document()) {
             document.set_title(title);
         }
-        // || {}
+        || { /* no cleanup needed */ }
     });
 }

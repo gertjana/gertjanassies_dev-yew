@@ -82,6 +82,20 @@ pub fn page(props: &PageProps) -> Html {
         });
     }
 
+    // Set dynamic document title based on content
+    let title = if !markdown_content.is_empty() {
+        format!("{} - gertjanassies.dev", props.content)
+    } else if *loading {
+        "Loading... - gertjanassies.dev".to_string()
+    } else {
+        "Page Not Found - gertjanassies.dev".to_string()
+    };
+
+    // Update title on every render
+    if let Some(document) = web_sys::window().and_then(|w| w.document()) {
+        document.set_title(&title);
+    }
+
     if *loading {
         return html! {
             <div class="page loading">

@@ -409,6 +409,22 @@ pub fn post_view(props: &PostViewProps) -> Html {
             || ()
         });
     }
+    // Set dynamic document title based on post data
+    let title = if let Some(ref post) = *post_data {
+        format!(
+            "{} - gertjanassies.dev",
+            post.frontmatter.title.trim_matches([' ', '"'])
+        )
+    } else if *loading {
+        "Loading... - gertjanassies.dev".to_string()
+    } else {
+        "Post Not Found - gertjanassies.dev".to_string()
+    };
+
+    // Update title on every render
+    if let Some(document) = web_sys::window().and_then(|w| w.document()) {
+        document.set_title(&title);
+    }
 
     if *loading {
         return html! {

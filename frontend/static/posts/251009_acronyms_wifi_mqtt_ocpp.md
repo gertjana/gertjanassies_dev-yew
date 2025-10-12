@@ -16,7 +16,6 @@ summary: "How to connect to a backoffice"
 >  * Part 3: [Network and Charger to backoffice communication (Wifi/ MQTT / OCPP)](/post/251009_acronyms_wifi_mqtt_ocpp)  (this article)
 >  * Part 4: Optional: Charger to Car communication (Mode2)
 
-
 I've worked in e-mobility for over 11 years now, and from the moment I stepped into this market, I always felt the way chargepoints connect to a backoffice was less then optimal.
 
 Chargepoints connect to a backoffice through a websocket connetion, this means every chargepoint has to have an active connection with a server. although this allows for bi-directional communication, it is ultimately not scalable.

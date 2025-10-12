@@ -8,7 +8,7 @@ use crate::components::posts::PostView;
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-#[derive(Clone, Routable, PartialEq)]
+#[derive(Clone, Routable, PartialEq, Debug)]
 pub enum Route {
     #[at("/")]
     Home,

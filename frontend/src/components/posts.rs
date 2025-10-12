@@ -8,6 +8,7 @@ use yew_router::prelude::*;
 use super::markdown::{load_markdown_content, render_markdown_to_html};
 use super::page_stats_display::PageStatsDisplay;
 use crate::app::Route;
+use crate::hooks::use_document_title;
 use crate::reading_time::calculate_reading_time;
 
 #[allow(dead_code)]
@@ -409,6 +410,18 @@ pub fn post_view(props: &PostViewProps) -> Html {
             || ()
         });
     }
+    // Set dynamic document title using the hook
+    let title = if let Some(ref post) = *post_data {
+        format!(
+            "{} - gertjanassies.dev",
+            post.frontmatter.title.trim_matches([' ', '"'])
+        )
+    } else if *loading {
+        "Loading... - gertjanassies.dev".to_string()
+    } else {
+        "Post Not Found - gertjanassies.dev".to_string()
+    };
+    use_document_title(&title);
 
     if *loading {
         return html! {

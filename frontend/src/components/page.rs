@@ -3,6 +3,7 @@ use yew::prelude::*;
 
 use super::markdown::{load_markdown_content, render_markdown_to_html};
 use super::page_stats_display::PageStatsDisplay;
+use crate::hooks::use_document_title;
 use crate::reading_time::calculate_reading_time;
 
 #[derive(Properties, PartialEq)]
@@ -82,7 +83,7 @@ pub fn page(props: &PageProps) -> Html {
         });
     }
 
-    // Set dynamic document title based on content
+    // Set dynamic document title using the hook
     let title = if !markdown_content.is_empty() {
         format!("{} - gertjanassies.dev", props.content)
     } else if *loading {
@@ -90,11 +91,7 @@ pub fn page(props: &PageProps) -> Html {
     } else {
         "Page Not Found - gertjanassies.dev".to_string()
     };
-
-    // Update title on every render
-    if let Some(document) = web_sys::window().and_then(|w| w.document()) {
-        document.set_title(&title);
-    }
+    use_document_title(&title);
 
     if *loading {
         return html! {

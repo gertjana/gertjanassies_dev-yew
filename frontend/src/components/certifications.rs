@@ -1,7 +1,5 @@
 use yew::prelude::*;
 
-// This is a test comment to trigger rust-analyzer refresh
-
 #[allow(dead_code)]
 struct CertificationBadge {
     name: &'static str,  // Badge name for alt text and title

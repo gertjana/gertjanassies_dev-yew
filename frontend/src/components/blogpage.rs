@@ -1,5 +1,4 @@
 use super::Page;
-use crate::components::posts::Posts;
 use crate::hooks::use_document_title;
 use yew::prelude::*;
 
@@ -9,9 +8,7 @@ pub fn blog_page() -> Html {
 
     html! {
         <div class="blog-page">
-            <Page content="blog">
-                <Posts featured_only={false} />
-            </Page>
+            <Page content="blog" />
         </div>
     }
 }

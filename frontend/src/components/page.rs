@@ -1,15 +1,17 @@
 use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;
 
-use super::markdown::{load_markdown_content, render_markdown_to_html};
 use super::page_stats_display::PageStatsDisplay;
 use crate::hooks::use_document_title;
+use crate::markdown::{
+    load_markdown_content, parse_markdown_with_components, render_component_by_name,
+    render_markdown_to_html,
+};
 use crate::reading_time::calculate_reading_time;
 
 #[derive(Properties, PartialEq)]
 pub struct PageProps {
     pub content: AttrValue,
-    pub children: Children,
 }
 
 #[function_component(Page)]
@@ -109,22 +111,34 @@ pub fn page(props: &PageProps) -> Html {
         };
     }
 
-    let rendered_html = if !markdown_content.is_empty() {
-        render_markdown_to_html(&markdown_content)
+    // Parse markdown content for components
+    let markdown_parts = if !markdown_content.is_empty() {
+        parse_markdown_with_components(&markdown_content)
     } else {
-        String::new()
+        Vec::new()
     };
 
     html! {
         <div class="page">
-            if !rendered_html.is_empty() {
+            if !markdown_parts.is_empty() {
                 <div class="markdown-content">
-                    {Html::from_html_unchecked(rendered_html.into())}
+                    {
+                        markdown_parts.iter().map(|part| {
+                            if part.is_component {
+                                if let Some(component_name) = &part.component_name {
+                                    render_component_by_name(component_name, &part.attributes)
+                                } else {
+                                    html! { <div class="error">{"Invalid component"}</div> }
+                                }
+                            } else if !part.content.is_empty() {
+                                Html::from_html_unchecked(AttrValue::from(render_markdown_to_html(&part.content)))
+                            } else {
+                                html! { <></> }
+                            }
+                        }).collect::<Html>()
+                    }
                 </div>
             }
-            <div class="page-children">
-                {props.children.clone()}
-            </div>
             // Add page stats display at the bottom
             <PageStatsDisplay slug={props.content.clone()} track_view={true} reading_time_seconds={calculate_reading_time(&markdown_content) as u32} />
         </div>

@@ -42,22 +42,19 @@ pub fn online_places() -> Html {
     ];
 
     html! {
-        <div>
-            <h3>{"Find me online"}</h3>
-            <div class="online-places">
-                {
-                    for online_places.iter().map(|place| {
-                        let icon = Html::from_html_unchecked(place.svg.into());
-                        html! {
-                            <div class="online-place">
-                                <a href={place.url} target="_blank" rel="noopener noreferrer" alt={place.name} title={place.name}>
-                                    { icon }
-                                </a>
-                            </div>
-                        }
-                    })
-                }
-            </div>
+        <div class="online-places">
+            {
+                for online_places.iter().map(|place| {
+                    let icon = Html::from_html_unchecked(place.svg.into());
+                    html! {
+                        <div class="online-place">
+                            <a href={place.url} target="_blank" rel="noopener noreferrer" title={place.name}>
+                                { icon }
+                            </a>
+                        </div>
+                    }
+                })
+            }
         </div>
     }
 }

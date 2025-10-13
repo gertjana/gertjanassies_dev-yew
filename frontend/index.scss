@@ -941,11 +941,29 @@ footer {
   justify-content: center;
   transition: transform 0.2s ease, opacity 0.2s ease;
   text-decoration: none;
+  position: relative;
 }
 
 .online-place a:hover {
-  transform: scale(1.1);
+  transform: scale(1.25);
   opacity: 0.8;
+}
+
+// Custom tooltip for online places (similar to technologies)
+.online-place a:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
 }
 
 /* Certifications - Badge Display */
@@ -1078,6 +1096,7 @@ footer {
   width: 3em;
   height: 3em;
   display: block;
+  pointer-events: none;
 }
 
 /* Page Component Styles */

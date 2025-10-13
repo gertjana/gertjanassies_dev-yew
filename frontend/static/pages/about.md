@@ -18,12 +18,14 @@ I'm just a guy who (in random order) likes to:
 
 Software Development professional with over 25 years of experience where I've done many different things:
 
-* Software Engineer in (old to new) C#, Java, Javascript, Python, Scala, Haskell, Go, Typescript, Rust
-* Cloud: Certified AWS Solutions Architect associate, Certified Terraform practitioner
-* Site Reliability Engineer (the google kind). CI/CD, Observability, Scalability
-* Agile: Certified Scrummaster, Certified Kanban practitioner
-* Leadership: Technical Product Owner / Teamlead
-* Electronics Engineer: embedded controllers, IoT, LoRa
+| Area | Experience |
+|------|------------|
+| Software Engineering | C#, Java, Javascript, Python, Scala, Haskell, Go, Typescript, Rust |
+| Cloud Engineering | Certified AWS Solutions Architect associate, Certified Terraform practitioner |
+| Site Reliability Engineering | (the google kind) CI/CD, Observability, Scalability,  |
+| Agile | Certified Scrummaster, Certified Kanban Management Professional |
+| Leadership | Technical Product Owner / Teamlead |
+| Electronics Engineering | Embedded controllers, IoT, LoRa |
 
 ### Certifications
 
@@ -31,14 +33,15 @@ Software Development professional with over 25 years of experience where I've do
 
 ### Technologies and Tools
 
-#### Programming Languages
+##### Programming Languages
 
 <Technologies type="languages" />
 
-#### Tools & Infrastructure
+##### Tools & Infrastructure
 
 <Technologies type="tools" />
 
 ### Online Places
 
+Find my online in these places
 <OnlinePlaces />

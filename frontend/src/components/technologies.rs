@@ -9,7 +9,32 @@ struct Technology {
 #[derive(Properties, PartialEq)]
 pub struct TechnologiesProps {
     #[prop_or_default]
-    pub r#type: String,
+    pub r#type: TechnologyType,
+}
+
+#[derive(Debug, Clone, PartialEq, Default)]
+pub enum TechnologyType {
+    #[default]
+    Languages,
+    Tools,
+}
+
+impl From<&str> for TechnologyType {
+    fn from(s: &str) -> Self {
+        match s {
+            "tools" => TechnologyType::Tools,
+            _ => TechnologyType::Languages,
+        }
+    }
+}
+
+impl std::fmt::Display for TechnologyType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TechnologyType::Languages => write!(f, "languages"),
+            TechnologyType::Tools => write!(f, "tools"),
+        }
+    }
 }
 
 #[function_component(Technologies)]
@@ -97,9 +122,9 @@ pub fn technologies(props: &TechnologiesProps) -> Html {
         },
     ];
 
-    let technologies = match props.r#type.as_str() {
-        "tools" => tools,
-        _ => programming_languages, // Default to languages for any other value (including "languages")
+    let technologies = match props.r#type {
+        TechnologyType::Tools => tools,
+        TechnologyType::Languages => programming_languages,
     };
     html! {
         <div class="technologies">

@@ -43,5 +43,5 @@ Software Development professional with over 25 years of experience where I've do
 
 ### Online Places
 
-Find my online in these places
+Find me online in these places
 <OnlinePlaces />

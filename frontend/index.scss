@@ -956,12 +956,24 @@ footer {
   top: -35px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: #e53e3e; // Darker red to match online places hover color
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 12px;
   white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.online-place a:hover::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: #e53e3e; // Darker red arrow
   z-index: 1000;
   pointer-events: none;
 }
@@ -1032,26 +1044,42 @@ footer {
     svg {
         width: 100%;
         height: 100%;
-        fill: #666666;
         transition: fill 0.2s ease;
     }
 
     &:hover {
         transform: scale(1.3);
+    }
 
+    // Languages - Soft Blue
+    &.languages {
         svg {
-            fill: #4a90e2;
+            fill: #a8c8ec; // Soft pastel blue
+        }
+
+        &:hover svg {
+            fill: #4a90e2; // Darker blue on hover
         }
     }
 
-    // Tooltip styling
+    // Tools - Soft Purple
+    &.tools {
+        svg {
+            fill: #c8a8ec; // Soft pastel purple
+        }
+
+        &:hover svg {
+            fill: #8e4ae2; // Darker purple on hover
+        }
+    }
+
+    // Tooltip styling - Base
     &:hover::after {
         content: attr(title);
         position: absolute;
         top: -35px;
         left: 50%;
         transform: translateX(-50%);
-        background-color: rgba(0, 0, 0, 0.8);
         color: white;
         padding: 4px 8px;
         border-radius: 4px;
@@ -1068,15 +1096,42 @@ footer {
         left: 50%;
         transform: translateX(-50%);
         border: 4px solid transparent;
-        border-top-color: rgba(0, 0, 0, 0.8);
         z-index: 1000;
         pointer-events: none;
     }
-}.online-place svg {
-  width: 3em;
-  height: 3em;
-  display: block;
-  pointer-events: none;
+
+    // Languages tooltip - Blue background
+    &.languages:hover::after {
+        background-color: #4a90e2; // Darker blue
+    }
+
+    &.languages:hover::before {
+        border-top-color: #4a90e2; // Darker blue
+    }
+
+    // Tools tooltip - Purple background
+    &.tools:hover::after {
+        background-color: #8e4ae2; // Darker purple
+    }
+
+    &.tools:hover::before {
+        border-top-color: #8e4ae2; // Darker purple
+    }
+}
+
+.online-place {
+    svg {
+        width: 3em;
+        height: 3em;
+        display: block;
+        pointer-events: none;
+        fill: #f5a3a3; // Soft pastel red
+        transition: fill 0.2s ease;
+    }
+
+    a:hover svg {
+        fill: #e53e3e; // Darker red on hover
+    }
 }
 
 /* Page Component Styles */

@@ -2,50 +2,72 @@ use yew::prelude::*;
 
 #[allow(dead_code)]
 struct CertificationBadge {
-    id: &'static str,
-    title: &'static str,
-    issuer: &'static str,
-    image_path: &'static str,
+    name: &'static str,  // Badge name for alt text and title
+    url: &'static str,   // Link to certificate verification
+    image: &'static str, // Path to badge image file
+    width: &'static str,
+    height: &'static str,
 }
 
 #[function_component(Certifications)]
 pub fn certifications() -> Html {
     let certifications: Vec<CertificationBadge> = vec![
         CertificationBadge {
-            id: "e429c916-eca4-4e1a-99f0-7b0035d0984e",
-            title: "AWS Solutions Architect - Associate",
-            issuer: "Amazon Web Services (AWS)",
-            image_path: "/static/images/aws-solutions-architect-associate.png",
+            name: "AWS Certified Solutions Architect Associate",
+            url: "https://www.credly.com/badges/e429c916-eca4-4e1a-99f0-7b0035d0984e",
+            image: "/static/images/badges/aws-certified-solutions-architect-associate.png",
+            width: "150",
+            height: "150",
         },
         CertificationBadge {
-            id: "a7e6f1ec-d156-43a3-a711-1e782cf17c41",
-            title: "HashiCorp Certified: Terraform Associate",
-            issuer: "HashiCorp",
-            image_path: "/static/images/terraform-associate.png",
+            name: "HashiCorp Certified: Terraform Associate",
+            url: "https://www.credly.com/badges/a7e6f1ec-d156-43a3-a711-1e782cf17c41",
+            image: "/static/images/badges/hashicorp-certified-terraform-associate-003.png",
+            width: "150",
+            height: "150",
         },
-        // Add more badges here as needed
+        CertificationBadge {
+            name: "Kanban Management Professional",
+            url: "https://edu.kanban.university/user/83575/8/qualification-certificate/R2VydGphbiBBc3NpZXM6ZzlUaTJEQ2pUUWIqM1llNjoxNzYwMzYwMTM2",
+            image: "/static/images/badges/KMP_Badge.svg",
+            width: "150",
+            height: "150",
+        },
+        // Add more badges here - supports any certification provider!
+        //
+        // Just add the badge image to /static/images/badges/ and create an entry:
+        //
+        // CertificationBadge {
+        //     name: "Your Certification Name",
+        //     url: "https://verification-url.com/your-cert",
+        //     image: "/static/images/badges/your-badge.png",
+        //     width: "150",
+        //     height: "150",
+        // },
     ];
 
     html! {
-        <div class="certifications">
-            {
-                for certifications.iter().map(|cert| {
-                    let badge_url = format!("https://www.credly.com/badges/{}", cert.id);
-                    html! {
-                        <div class="certification-badge">
-                            <a href={badge_url} target="_blank" rel="noopener noreferrer" title={format!("{} - {}", cert.title, cert.issuer)}>
-                                <img
-                                    src={cert.image_path}
-                                    alt={cert.title}
-                                    width="150"
-                                    height="150"
-                                    loading="lazy"
-                                />
-                            </a>
-                        </div>
-                    }
-                })
-            }
+        <div>
+            <h3>{"Certifications"}</h3>
+            <div class="certifications">
+                {
+                    for certifications.iter().map(|cert| {
+                        html! {
+                            <div class="certification-badge">
+                                <a href={cert.url} target="_blank" rel="noopener noreferrer" class="certification-link" title={cert.name}>
+                                    <img
+                                        src={cert.image}
+                                        alt={cert.name}
+                                        width={cert.width}
+                                        height={cert.height}
+                                        loading="lazy"
+                                    />
+                                </a>
+                            </div>
+                        }
+                    })
+                }
+            </div>
         </div>
     }
 }

@@ -1,5 +1,5 @@
 use crate::components::posts::Posts;
-use crate::components::{Certifications, OnlinePlaces, Technologies};
+use crate::components::{Certifications, OnlinePlaces, Technologies, TechnologyType};
 use pulldown_cmark::{html, CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
 use std::collections::HashMap;
 use wasm_bindgen::JsCast;
@@ -14,8 +14,14 @@ pub trait MarkdownRenderable {
 
 // Implement the trait for existing components
 impl MarkdownRenderable for Technologies {
-    fn render(_attributes: &HashMap<String, String>) -> Html {
-        html! { <Technologies /> }
+    fn render(attributes: &HashMap<String, String>) -> Html {
+        let type_str = attributes
+            .get("type")
+            .map(|s| s.as_str())
+            .unwrap_or("languages");
+        let r#type = TechnologyType::from(type_str);
+
+        html! { <Technologies {r#type} /> }
     }
 }
 

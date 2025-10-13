@@ -47,27 +47,24 @@ pub fn certifications() -> Html {
     ];
 
     html! {
-        <div>
-            <h3>{"Certifications"}</h3>
-            <div class="certifications">
-                {
-                    for certifications.iter().map(|cert| {
-                        html! {
-                            <div class="certification-badge">
-                                <a href={cert.url} target="_blank" rel="noopener noreferrer" class="certification-link" title={cert.name}>
-                                    <img
-                                        src={cert.image}
-                                        alt={cert.name}
-                                        width={cert.width}
-                                        height={cert.height}
-                                        loading="lazy"
-                                    />
-                                </a>
-                            </div>
-                        }
-                    })
-                }
-            </div>
+        <div class="certifications">
+            {
+                for certifications.iter().map(|cert| {
+                    html! {
+                        <div class="certification-badge">
+                            <a href={cert.url} target="_blank" rel="noopener noreferrer" class="certification-link" title={cert.name}>
+                                <img
+                                    src={cert.image}
+                                    alt={cert.name}
+                                    width={cert.width}
+                                    height={cert.height}
+                                    loading="lazy"
+                                />
+                            </a>
+                        </div>
+                    }
+                })
+            }
         </div>
     }
 }

@@ -1,11 +1,12 @@
-use web_sys::window;
 use yew::prelude::*;
 
 // This is a test comment to trigger rust-analyzer refresh
 
 #[allow(dead_code)]
 struct CertificationBadge {
-    id: &'static str,
+    name: &'static str,  // Badge name for alt text and title
+    url: &'static str,   // Link to certificate verification
+    image: &'static str, // Path to badge image file
     width: &'static str,
     height: &'static str,
 }
@@ -14,52 +15,38 @@ struct CertificationBadge {
 pub fn certifications() -> Html {
     let certifications: Vec<CertificationBadge> = vec![
         CertificationBadge {
-            id: "a7e6f1ec-d156-43a3-a711-1e782cf17c41",
+            name: "AWS Certified Solutions Architect Associate",
+            url: "https://www.credly.com/badges/e429c916-eca4-4e1a-99f0-7b0035d0984e",
+            image: "/static/images/badges/aws-certified-solutions-architect-associate.png",
             width: "150",
-            height: "270",
+            height: "150",
         },
         CertificationBadge {
-            id: "e429c916-eca4-4e1a-99f0-7b0035d0984e",
+            name: "HashiCorp Certified: Terraform Associate",
+            url: "https://www.credly.com/badges/a7e6f1ec-d156-43a3-a711-1e782cf17c41",
+            image: "/static/images/badges/hashicorp-certified-terraform-associate-003.png",
             width: "150",
-            height: "270",
+            height: "150",
         },
-        // Add more badges here as needed
+        CertificationBadge {
+            name: "Kanban Management Professional",
+            url: "https://edu.kanban.university/user/83575/8/qualification-certificate/R2VydGphbiBBc3NpZXM6ZzlUaTJEQ2pUUWIqM1llNjoxNzYwMzYwMTM2",
+            image: "/static/images/badges/KMP_Badge.svg",
+            width: "150",
+            height: "150",
+        },
+        // Add more badges here - supports any certification provider!
+        //
+        // Just add the badge image to /static/images/badges/ and create an entry:
+        //
+        // CertificationBadge {
+        //     name: "Your Certification Name",
+        //     url: "https://verification-url.com/your-cert",
+        //     image: "/static/images/badges/your-badge.png",
+        //     width: "150",
+        //     height: "150",
+        // },
     ];
-
-    // Load the Credly embed script when component mounts
-    use_effect_with((), |_| {
-        // Check if script is already loaded
-        if let Some(document) = window().and_then(|w| w.document()) {
-            let scripts = document.get_elements_by_tag_name("script");
-            let mut script_exists = false;
-
-            for i in 0..scripts.length() {
-                if let Some(script) = scripts.item(i) {
-                    if let Some(src) = script.get_attribute("src") {
-                        if src.contains("cdn.credly.com/assets/utilities/embed.js") {
-                            script_exists = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if !script_exists {
-                if let Ok(script) = document.create_element("script") {
-                    let _ = script.set_attribute("type", "text/javascript");
-                    let _ = script.set_attribute("async", "");
-                    let _ =
-                        script.set_attribute("src", "//cdn.credly.com/assets/utilities/embed.js");
-
-                    if let Some(head) = document.head() {
-                        let _ = head.append_child(&script);
-                    }
-                }
-            }
-        }
-
-        || {}
-    });
 
     html! {
         <div>
@@ -69,13 +56,15 @@ pub fn certifications() -> Html {
                     for certifications.iter().map(|cert| {
                         html! {
                             <div class="certification-badge">
-                                <div
-                                    data-iframe-width={cert.width}
-                                    data-iframe-height={cert.height}
-                                    data-share-badge-id={cert.id}
-                                    data-share-badge-host="https://www.credly.com"
-                                >
-                                </div>
+                                <a href={cert.url} target="_blank" rel="noopener noreferrer" class="certification-link" title={cert.name}>
+                                    <img
+                                        src={cert.image}
+                                        alt={cert.name}
+                                        width={cert.width}
+                                        height={cert.height}
+                                        loading="lazy"
+                                    />
+                                </a>
                             </div>
                         }
                     })

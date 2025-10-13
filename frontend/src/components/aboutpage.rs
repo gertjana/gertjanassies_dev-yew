@@ -1,15 +1,11 @@
-use super::{Certifications, OnlinePlaces, Page, Technologies};
+use super::Page;
 use yew::prelude::*;
 
 #[function_component(AboutPage)]
 pub fn about_page() -> Html {
     html! {
         <div class="about-page">
-            <Page content="about">
-                <Technologies />
-                <OnlinePlaces />
-                <Certifications />
-            </Page>
+            <Page content="about" />
         </div>
     }
 }

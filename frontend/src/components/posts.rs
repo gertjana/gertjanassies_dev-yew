@@ -5,10 +5,10 @@ use web_sys::{console, window};
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-use super::markdown::{load_markdown_content, render_markdown_to_html};
 use super::page_stats_display::PageStatsDisplay;
 use crate::app::Route;
 use crate::hooks::use_document_title;
+use crate::markdown::{load_markdown_content, render_markdown_to_html};
 use crate::reading_time::calculate_reading_time;
 
 #[allow(dead_code)]

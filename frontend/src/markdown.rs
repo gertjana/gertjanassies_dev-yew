@@ -14,8 +14,13 @@ pub trait MarkdownRenderable {
 
 // Implement the trait for existing components
 impl MarkdownRenderable for Technologies {
-    fn render(_attributes: &HashMap<String, String>) -> Html {
-        html! { <Technologies /> }
+    fn render(attributes: &HashMap<String, String>) -> Html {
+        let r#type = attributes
+            .get("type")
+            .cloned()
+            .unwrap_or_else(|| "languages".to_string());
+
+        html! { <Technologies {r#type} /> }
     }
 }
 

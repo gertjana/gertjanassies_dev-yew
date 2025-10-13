@@ -25,13 +25,19 @@ Software Development professional with over 25 years of experience where I've do
 * Leadership: Technical Product Owner / Teamlead
 * Electronics Engineer: embedded controllers, IoT, LoRa
 
-### Technologies and Tools
-
-<Technologies />
-
 ### Certifications
 
 <Certifications />
+
+### Technologies and Tools
+
+#### Programming Languages
+
+<Technologies type="languages" />
+
+#### Tools & Infrastructure
+
+<Technologies type="tools" />
 
 ### Online Places
 

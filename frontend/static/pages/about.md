@@ -24,3 +24,15 @@ Software Development professional with over 25 years of experience where I've do
 * Agile: Certified Scrummaster, Certified Kanban practitioner
 * Leadership: Technical Product Owner / Teamlead
 * Electronics Engineer: embedded controllers, IoT, LoRa
+
+### Technologies and Tools
+
+<Technologies />
+
+### Certifications
+
+<Certifications />
+
+### Online Places
+
+<OnlinePlaces />

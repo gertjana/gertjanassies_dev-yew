@@ -1,3 +1,5 @@
+use crate::traits::MarkdownRenderable;
+use std::collections::HashMap;
 use yew::prelude::*;
 
 #[allow(dead_code)]
@@ -66,5 +68,12 @@ pub fn certifications() -> Html {
                 })
             }
         </div>
+    }
+}
+
+// Implement the trait for Certifications component
+impl MarkdownRenderable for Certifications {
+    fn render(_attributes: &HashMap<String, String>) -> Html {
+        html! { <Certifications /> }
     }
 }

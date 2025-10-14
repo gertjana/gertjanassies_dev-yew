@@ -16,4 +16,4 @@ pub mod technologies;
 pub use certifications::Certifications;
 pub use onlineplaces::OnlinePlaces;
 pub use page::Page;
-pub use technologies::{Technologies, TechnologyType};
+pub use technologies::Technologies;

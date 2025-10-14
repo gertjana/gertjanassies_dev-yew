@@ -1,3 +1,5 @@
+use crate::traits::MarkdownRenderable;
+use std::collections::HashMap;
 use yew::prelude::*;
 
 struct OnlinePlace {
@@ -61,5 +63,12 @@ pub fn online_places() -> Html {
                 })
             }
         </div>
+    }
+}
+
+// Implement the trait for OnlinePlaces component
+impl MarkdownRenderable for OnlinePlaces {
+    fn render(_attributes: &HashMap<String, String>) -> Html {
+        html! { <OnlinePlaces /> }
     }
 }

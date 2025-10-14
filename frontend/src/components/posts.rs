@@ -1,3 +1,4 @@
+use crate::traits::MarkdownRenderable;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use wasm_bindgen_futures::spawn_local;
@@ -201,6 +202,18 @@ pub fn posts(props: &PostsProps) -> Html {
                 </div>
             }
         </div>
+    }
+}
+
+// Implement the trait for Posts component
+impl MarkdownRenderable for Posts {
+    fn render(attributes: &HashMap<String, String>) -> Html {
+        let featured_only = attributes
+            .get("featured_only")
+            .map(|v| v == "true")
+            .unwrap_or(false);
+
+        html! { <Posts {featured_only} /> }
     }
 }
 

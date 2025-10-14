@@ -47,7 +47,7 @@ impl Component for Image {
         let props = ctx.props();
         let link = ctx.link();
 
-        let thumbnail_style = format!("width: {}px; cursor: pointer;", props.thumbnail_width);
+        let thumbnail_style = format!("width: {}px;", props.thumbnail_width);
         let modal_class = if self.modal_open {
             "image-modal open"
         } else {

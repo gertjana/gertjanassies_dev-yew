@@ -1,6 +1,7 @@
 use crate::components::posts::Posts;
 use crate::components::{Certifications, OnlinePlaces, Technologies};
 use crate::traits::MarkdownRenderable;
+use once_cell::sync::Lazy;
 use pulldown_cmark::{html, CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
 use regex::Regex;
 use std::collections::HashMap;
@@ -8,6 +9,31 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::{window, Request, RequestInit, RequestMode, Response};
 use yew::prelude::*;
+
+// Lazy-compiled regex patterns for better performance
+// These are compiled once when first accessed and reused across all calls
+
+/// Regex to match self-closing component tags
+/// Pattern explanation:
+/// - `<([A-Z][a-zA-Z0-9]*)` - Component name starting with uppercase (capture group 1)
+/// - `((?:\s+[a-zA-Z_][a-zA-Z0-9_]*\s*=\s*(?:'[^']*'|"[^"]*"))*)?` - Optional attributes (capture group 2)
+/// - `\s*/>` - Optional whitespace and closing />
+static COMPONENT_REGEX: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(
+        r#"<([A-Z][a-zA-Z0-9]*)((?:\s+[a-zA-Z_][a-zA-Z0-9_]*\s*=\s*(?:'[^']*'|"[^"]*"))*)\s*/>"#,
+    )
+    .expect("Component regex pattern should be valid")
+});
+
+/// Regex to match individual attributes within component tags
+/// Matches: attr="value" or attr='value'
+/// - `([a-zA-Z_][a-zA-Z0-9_]*)` - Attribute name (capture group 1)
+/// - `\s*=\s*` - Equals sign with optional whitespace
+/// - `(?:"([^"]*)"|'([^']*)')` - Quoted value, either double (group 2) or single (group 3) quotes
+static ATTRIBUTE_REGEX: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(r#"([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:"([^"]*)"|'([^']*)')"#)
+        .expect("Attribute regex pattern should be valid")
+});
 
 // Component registry type
 type ComponentRenderer = fn(&HashMap<String, String>) -> Html;
@@ -162,11 +188,7 @@ fn parse_component_attributes(tag_content: &str) -> (String, HashMap<String, Str
 
     let component_name = parts[0].to_string();
 
-    // Use regex to parse attributes more robustly
-    // Matches: attr="value" or attr='value'
-    let attr_regex =
-        Regex::new(r#"([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:"([^"]*)"|'([^']*)')"#).unwrap();
-
+    // Use lazy static regex to parse attributes more robustly
     // Join the remaining parts back into a string for regex parsing
     let attr_string = if parts.len() > 1 {
         parts[1..].join(" ")
@@ -174,7 +196,7 @@ fn parse_component_attributes(tag_content: &str) -> (String, HashMap<String, Str
         String::new()
     };
 
-    for cap in attr_regex.captures_iter(&attr_string) {
+    for cap in ATTRIBUTE_REGEX.captures_iter(&attr_string) {
         let key = cap.get(1).unwrap().as_str().to_string();
         // Check which quote group matched (group 2 for double quotes, group 3 for single quotes)
         let value = if let Some(double_quoted) = cap.get(2) {
@@ -206,21 +228,11 @@ fn parse_component_attributes(tag_content: &str) -> (String, HashMap<String, Str
 /// - Self-closing syntax: `/>`
 pub fn parse_markdown_with_components(markdown: &str) -> Vec<MarkdownPart> {
     let mut parts = Vec::new();
-
-    // Regex pattern to match self-closing component tags
-    // Pattern explanation:
-    // <([A-Z][a-zA-Z0-9]*) - Component name (capture group 1)
-    // ((?:\s+[a-zA-Z_][a-zA-Z0-9_]*\s*=\s*(?:'[^']*'|"[^"]*"))*)? - Optional attributes (capture group 2)
-    // \s*/> - Optional whitespace and closing />
-    let component_regex = Regex::new(
-        r#"<([A-Z][a-zA-Z0-9]*)((?:\s+[a-zA-Z_][a-zA-Z0-9_]*\s*=\s*(?:'[^']*'|"[^"]*"))*)?\s*/>"#,
-    )
-    .unwrap();
-
     let mut last_end = 0;
 
+    // Use the lazy-compiled regex for better performance
     // Find all component matches
-    for component_match in component_regex.find_iter(markdown) {
+    for component_match in COMPONENT_REGEX.find_iter(markdown) {
         let start = component_match.start();
         let end = component_match.end();
 

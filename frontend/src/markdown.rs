@@ -1,52 +1,13 @@
 use crate::components::posts::Posts;
-use crate::components::{Certifications, OnlinePlaces, Technologies, TechnologyType};
+use crate::components::{Certifications, OnlinePlaces, Technologies};
+use crate::traits::MarkdownRenderable;
 use pulldown_cmark::{html, CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
+use regex::Regex;
 use std::collections::HashMap;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::{window, Request, RequestInit, RequestMode, Response};
 use yew::prelude::*;
-
-// Trait for components that can be rendered from markdown
-pub trait MarkdownRenderable {
-    fn render(attributes: &HashMap<String, String>) -> Html;
-}
-
-// Implement the trait for existing components
-impl MarkdownRenderable for Technologies {
-    fn render(attributes: &HashMap<String, String>) -> Html {
-        let type_str = attributes
-            .get("type")
-            .map(|s| s.as_str())
-            .unwrap_or("languages");
-        let r#type = TechnologyType::from(type_str);
-
-        html! { <Technologies {r#type} /> }
-    }
-}
-
-impl MarkdownRenderable for Certifications {
-    fn render(_attributes: &HashMap<String, String>) -> Html {
-        html! { <Certifications /> }
-    }
-}
-
-impl MarkdownRenderable for OnlinePlaces {
-    fn render(_attributes: &HashMap<String, String>) -> Html {
-        html! { <OnlinePlaces /> }
-    }
-}
-
-impl MarkdownRenderable for Posts {
-    fn render(attributes: &HashMap<String, String>) -> Html {
-        let featured_only = attributes
-            .get("featured_only")
-            .map(|v| v == "true")
-            .unwrap_or(false);
-
-        html! { <Posts {featured_only} /> }
-    }
-}
 
 // Component registry type
 type ComponentRenderer = fn(&HashMap<String, String>) -> Html;
@@ -190,7 +151,7 @@ pub struct MarkdownPart {
     pub attributes: HashMap<String, String>,
 }
 
-// Parse attributes from a component tag string
+// Parse attributes from a component tag string using regex
 fn parse_component_attributes(tag_content: &str) -> (String, HashMap<String, String>) {
     let mut attributes = HashMap::new();
     let parts: Vec<&str> = tag_content.split_whitespace().collect();
@@ -201,73 +162,113 @@ fn parse_component_attributes(tag_content: &str) -> (String, HashMap<String, Str
 
     let component_name = parts[0].to_string();
 
-    // Parse attributes in the form key="value" or key='value'
-    for part in parts.iter().skip(1) {
-        if let Some(eq_pos) = part.find('=') {
-            let key = part[..eq_pos].to_string();
-            let value_part = &part[eq_pos + 1..];
+    // Use regex to parse attributes more robustly
+    // Matches: attr="value" or attr='value'
+    let attr_regex =
+        Regex::new(r#"([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:"([^"]*)"|'([^']*)')"#).unwrap();
 
-            // Remove quotes if present
-            let value = if (value_part.starts_with('"') && value_part.ends_with('"'))
-                || (value_part.starts_with('\'') && value_part.ends_with('\''))
-            {
-                value_part[1..value_part.len() - 1].to_string()
-            } else {
-                value_part.to_string()
-            };
+    // Join the remaining parts back into a string for regex parsing
+    let attr_string = if parts.len() > 1 {
+        parts[1..].join(" ")
+    } else {
+        String::new()
+    };
 
-            attributes.insert(key, value);
-        }
+    for cap in attr_regex.captures_iter(&attr_string) {
+        let key = cap.get(1).unwrap().as_str().to_string();
+        // Check which quote group matched (group 2 for double quotes, group 3 for single quotes)
+        let value = if let Some(double_quoted) = cap.get(2) {
+            double_quoted.as_str().to_string()
+        } else if let Some(single_quoted) = cap.get(3) {
+            single_quoted.as_str().to_string()
+        } else {
+            String::new()
+        };
+
+        attributes.insert(key, value);
     }
 
     (component_name, attributes)
 }
 
-// Parse markdown with component tags and return structured parts
+/// Parse markdown with component tags using regex and return structured parts
+///
+/// This function uses regex to detect component tags anywhere in the markdown content,
+/// not just on separate lines. It supports:
+/// - Simple components: `<ComponentName />`
+/// - Components with attributes: `<ComponentName attr="value" />`
+/// - Inline components within paragraphs
+/// - Multiple components on the same line
+///
+/// The regex pattern matches:
+/// - Component names starting with uppercase letter: `[A-Z][a-zA-Z0-9]*`
+/// - Optional attributes with quoted values: `attr="value"` or `attr='value'`
+/// - Self-closing syntax: `/>`
 pub fn parse_markdown_with_components(markdown: &str) -> Vec<MarkdownPart> {
     let mut parts = Vec::new();
-    let lines: Vec<&str> = markdown.lines().collect();
-    let mut current_content = String::new();
 
-    for line in lines {
-        let trimmed = line.trim();
+    // Regex pattern to match self-closing component tags
+    // Pattern explanation:
+    // <([A-Z][a-zA-Z0-9]*) - Component name (capture group 1)
+    // ((?:\s+[a-zA-Z_][a-zA-Z0-9_]*\s*=\s*(?:'[^']*'|"[^"]*"))*)? - Optional attributes (capture group 2)
+    // \s*/> - Optional whitespace and closing />
+    let component_regex = Regex::new(
+        r#"<([A-Z][a-zA-Z0-9]*)((?:\s+[a-zA-Z_][a-zA-Z0-9_]*\s*=\s*(?:'[^']*'|"[^"]*"))*)?\s*/>"#,
+    )
+    .unwrap();
 
-        // Check if line contains a component tag
-        if trimmed.starts_with('<') && trimmed.ends_with(" />") {
-            // If we have accumulated content, add it as a markdown part
-            if !current_content.is_empty() {
+    let mut last_end = 0;
+
+    // Find all component matches
+    for component_match in component_regex.find_iter(markdown) {
+        let start = component_match.start();
+        let end = component_match.end();
+
+        // Add any markdown content before this component
+        if start > last_end {
+            let content = &markdown[last_end..start];
+            if !content.trim().is_empty() {
                 parts.push(MarkdownPart {
-                    content: current_content.trim().to_string(),
+                    content: content.to_string(),
                     is_component: false,
                     component_name: None,
                     attributes: HashMap::new(),
                 });
-                current_content.clear();
             }
+        }
 
-            // Extract component name and attributes
-            let tag_content = trimmed.trim_start_matches('<').trim_end_matches(" />");
+        // Parse the component
+        let full_tag = component_match.as_str();
+        let tag_content = &full_tag[1..full_tag.len() - 2]; // Remove < and />
+        let (component_name, attributes) = parse_component_attributes(tag_content);
 
-            let (component_name, attributes) = parse_component_attributes(tag_content);
+        parts.push(MarkdownPart {
+            content: String::new(),
+            is_component: true,
+            component_name: Some(component_name),
+            attributes,
+        });
 
-            // Add component part
+        last_end = end;
+    }
+
+    // Add any remaining markdown content after the last component
+    if last_end < markdown.len() {
+        let content = &markdown[last_end..];
+        if !content.trim().is_empty() {
             parts.push(MarkdownPart {
-                content: String::new(),
-                is_component: true,
-                component_name: Some(component_name),
-                attributes,
+                content: content.to_string(),
+                is_component: false,
+                component_name: None,
+                attributes: HashMap::new(),
             });
-        } else {
-            // Accumulate regular markdown content
-            current_content.push_str(line);
-            current_content.push('\n');
         }
     }
 
-    // Add any remaining content
-    if !current_content.is_empty() {
+    // If no components were found, add the entire markdown as content
+    if parts.is_empty() && !markdown.trim().is_empty() {
         parts.push(MarkdownPart {
-            content: current_content.trim().to_string(),
+            content: markdown.to_string(),
             is_component: false,
             component_name: None,
             attributes: HashMap::new(),
@@ -293,5 +294,74 @@ pub fn render_component_by_name(name: &str, attributes: &HashMap<String, String>
                 </div>
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_simple_component_detection() {
+        let markdown = "# Hello\n\n<Technologies />\n\nMore content";
+        let parts = parse_markdown_with_components(markdown);
+
+        assert_eq!(parts.len(), 3);
+        assert!(!parts[0].is_component);
+        assert_eq!(parts[0].content.trim(), "# Hello");
+
+        assert!(parts[1].is_component);
+        assert_eq!(parts[1].component_name.as_ref().unwrap(), "Technologies");
+        assert!(parts[1].attributes.is_empty());
+
+        assert!(!parts[2].is_component);
+        assert_eq!(parts[2].content.trim(), "More content");
+    }
+
+    #[test]
+    fn test_component_with_attributes() {
+        let markdown = r#"Before <Technologies type="tools" /> After"#;
+        let parts = parse_markdown_with_components(markdown);
+
+        assert_eq!(parts.len(), 3);
+        assert_eq!(parts[0].content.trim(), "Before");
+
+        assert!(parts[1].is_component);
+        assert_eq!(parts[1].component_name.as_ref().unwrap(), "Technologies");
+        assert_eq!(parts[1].attributes.get("type").unwrap(), "tools");
+
+        assert_eq!(parts[2].content.trim(), "After");
+    }
+
+    #[test]
+    fn test_multiple_components_same_line() {
+        let markdown = r#"<Certifications /> and <OnlinePlaces />"#;
+        let parts = parse_markdown_with_components(markdown);
+
+        assert_eq!(parts.len(), 3);
+        assert!(parts[0].is_component);
+        assert_eq!(parts[0].component_name.as_ref().unwrap(), "Certifications");
+
+        assert_eq!(parts[1].content.trim(), "and");
+
+        assert!(parts[2].is_component);
+        assert_eq!(parts[2].component_name.as_ref().unwrap(), "OnlinePlaces");
+    }
+
+    #[test]
+    fn test_component_attribute_parsing() {
+        let (name, attrs) = parse_component_attributes(r#"Technologies type="languages""#);
+        assert_eq!(name, "Technologies");
+        assert_eq!(attrs.get("type").unwrap(), "languages");
+
+        let (name, attrs) = parse_component_attributes("Posts featured_only='true'");
+        assert_eq!(name, "Posts");
+        assert_eq!(attrs.get("featured_only").unwrap(), "true");
+
+        let (name, attrs) =
+            parse_component_attributes(r#"MyComponent attr1="value1" attr2='value2'"#);
+        assert_eq!(name, "MyComponent");
+        assert_eq!(attrs.get("attr1").unwrap(), "value1");
+        assert_eq!(attrs.get("attr2").unwrap(), "value2");
     }
 }

@@ -1,3 +1,5 @@
+use crate::traits::MarkdownRenderable;
+use std::collections::HashMap;
 use yew::prelude::*;
 
 #[allow(dead_code)]
@@ -149,5 +151,18 @@ pub fn technologies(props: &TechnologiesProps) -> Html {
                 })
             }
         </div>
+    }
+}
+
+// Implement the trait for Technologies component
+impl MarkdownRenderable for Technologies {
+    fn render(attributes: &HashMap<String, String>) -> Html {
+        let type_str = attributes
+            .get("type")
+            .map(|s| s.as_str())
+            .unwrap_or("languages");
+        let r#type = TechnologyType::from(type_str);
+
+        html! { <Technologies {r#type} /> }
     }
 }

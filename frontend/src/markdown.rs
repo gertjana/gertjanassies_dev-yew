@@ -1,5 +1,5 @@
 use crate::components::posts::Posts;
-use crate::components::{Certifications, OnlinePlaces, Technologies};
+use crate::components::{Certifications, Image, OnlinePlaces, Technologies};
 use crate::traits::MarkdownRenderable;
 use once_cell::sync::Lazy;
 use pulldown_cmark::{html, CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
@@ -82,6 +82,7 @@ pub fn get_component_registry() -> HashMap<&'static str, ComponentRenderer> {
         "Certifications" => Certifications,
         "OnlinePlaces" => OnlinePlaces,
         "Posts" => Posts,
+        "Image" => Image,
         // Add new components here following the same pattern:
         // "MyNewComponent" => MyNewComponent,
     }

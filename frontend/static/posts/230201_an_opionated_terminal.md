@@ -87,7 +87,7 @@ end
 
 In the end it looks like this:
 
-![terminal screenshot](/static/images/an_opinionated_terminal_1.png)
+<Image path="/static/images/an_opinionated_terminal_1.png" alt="terminal screenshot" thumbnail_width="600" />
 
 Hopefully I showed you some things, that might make your commandline experience a bit more pleasurable.
 

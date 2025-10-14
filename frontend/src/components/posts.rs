@@ -9,7 +9,10 @@ use yew_router::prelude::*;
 use super::page_stats_display::PageStatsDisplay;
 use crate::app::Route;
 use crate::hooks::use_document_title;
-use crate::markdown::{load_markdown_content, render_markdown_to_html};
+use crate::markdown::{
+    load_markdown_content, parse_markdown_with_components, render_component_by_name,
+    render_markdown_to_html,
+};
 use crate::reading_time::calculate_reading_time;
 
 #[allow(dead_code)]
@@ -460,6 +463,9 @@ pub fn post_view(props: &PostViewProps) -> Html {
         };
     };
 
+    // Parse markdown content for components
+    let markdown_parts = parse_markdown_with_components(&post.content);
+
     html! {
         <div class="posts-container">
             <div class="post-view-container">
@@ -521,9 +527,23 @@ pub fn post_view(props: &PostViewProps) -> Html {
                         <img class="post-view-featured-image" src={post.frontmatter.image.clone()} alt={post.frontmatter.title.clone()} />
                     }
 
-                    // Render the markdown content as HTML
+                    // Render the markdown content with component support
                     <div class="post-markdown-content">
-                        { Html::from_html_unchecked(AttrValue::from(render_markdown_to_html(&post.content))) }
+                        {
+                            markdown_parts.iter().map(|part| {
+                                if part.is_component {
+                                    if let Some(component_name) = &part.component_name {
+                                        render_component_by_name(component_name, &part.attributes)
+                                    } else {
+                                        html! { <div class="error">{"Invalid component"}</div> }
+                                    }
+                                } else if !part.content.is_empty() {
+                                    Html::from_html_unchecked(AttrValue::from(render_markdown_to_html(&part.content)))
+                                } else {
+                                    html! { <></> }
+                                }
+                            }).collect::<Html>()
+                        }
                     </div>
                 </div>
 

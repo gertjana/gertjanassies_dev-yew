@@ -9,10 +9,6 @@ image: ""
 summary: "how to create an AI prompt on the commandline"
 ---
 
-<script lang="ts">
-    import { Lightbox } from 'svelte-lightbox';
-</script>
-
 
 ```
  > env GEMINI_API_KEY=<secret> uv run main.py

@@ -9,10 +9,6 @@ image: "/static/images/rusty_charger.webp"
 summary: "Focusing on the minimal hardware needed to build an EV Charger with Rust on a ESP32"
 ---
 
-<script lang="ts">
-    import { Lightbox } from 'svelte-lightbox';
-</script>
-
 > This is a series of articles about using Rust to program an ESP32 Microcontroller by building a minimal EV Charger.<br/>
 >  * Part 1: [A Proof of Concept](/post/240101_rust_on_esp32)
 >  * Part 2: [A minimal EV Charger hardware setup](/post/240125_rust_on_esp32_2_hardware) (this article)

@@ -12,10 +12,6 @@ published: true
 
 ---
 
-<script lang="ts">
-    import { Lightbox } from 'svelte-lightbox';
-</script>
-
 _Or how to find an excuse to play with a Raspberry Pico._
 
 While on a not particularly interesting online meeting, my eye fell on the [Raspberry Pico](https://www.raspberrypi.org/products/raspberry-pi-pico/) that I ordered and had just arrived that morning.

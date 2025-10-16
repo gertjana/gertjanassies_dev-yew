@@ -9,10 +9,6 @@ image: "/static/images/rust_on_esp32.png"
 summary: "Creating applications for ESP32 microcontrollers with the power of the Rust programming language."
 ---
 
-<script lang="ts">
-    import { Lightbox } from 'svelte-lightbox';
-</script>
-
 > This is a series of articles about using Rust to program an ESP32 Microcontroller by building a minimal EV Charger.<br/>
 >  * Part 1: [A Proof of Concept](/post/240101_rust_on_esp32) (this article)
 >  * Part 2: [A minimal EV Charger hardware setup](/post/240125_rust_on_esp32_2_hardware)
@@ -40,7 +36,7 @@ Therefore I will focus on the higher level `std` approach which allows the use o
 
 The application model for the `std` mode look like this:
 
-<Lightbox><img alt="Application Model" src="/static/images/application_model_light.png" style="float:left" /></Lightbox>
+<Image path="/static/images/application_model_light.png" alt="Application Model" thumbnail_width="600" />
 
 The following libraries are made available
 
@@ -72,7 +68,7 @@ As my daily work is all about allowing EV Drivers to charge their cars, I've dec
 
 For this I need to control GPIO (General Purpose Input Output) Pins to enable charging (relay), lock the cable (solenoid), display the charger state (multicolor led) and communicate to a backend (MQTT / IoT)
 
-<Lightbox><img alt="Application Model" src="/static/images/stamp_c3u_01.png" style="width:300px;float:right;" /></Lightbox>
+<Image path="/static/images/stamp_c3u_01.png" alt="Application Model" thumbnail_width="600" />
 
 ### hardware
 

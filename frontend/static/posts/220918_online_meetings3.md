@@ -26,7 +26,7 @@ Part 2: [All those online meetings - Part 2](/post/220801_online_meetings2)
 So it was working, and I was actually using it, but it was just a PCB (printed circuit board) laying on my desk. so I started thinking about creating a case for it. here's a picture of the PCB in its latest revision.
 the Link in the references will take you to this board on Aisler's website.
 
-<Lightbox><img alt="PCB" src="/static/images/online_meetings3_1.png" style="width:600px;" /></Lightbox>
+<Image path="/static/images/online_meetings3_1.png" alt="PCB" thumbnail_width="600" />
 
 I wanted the electronics to be visible so something transparent, which also would benefit from seeing the small OLED display I've added in the meantime.
 So I decided to make the top and bottom 2 mm Acrylic.
@@ -35,23 +35,23 @@ so let's spin up Fusion360. this is by far the best 3D CAD design tool I've work
 
 From the PCB design in [Kicad](https://www.kicad.org/), I exported the edges of the board, the drill holes in the corner as well as the edges of all the switches as a DXF file and imported that into Fusion360, now most designs in Fusion360 start with a 2D sketch.
 
-<Lightbox><img alt="Sketch" src="/static/images/online_meetings3_2.png" style="width:600px;" /></Lightbox>
+<Image path="/static/images/online_meetings3_2.png" alt="Sketch" thumbnail_width="600" />
 
 Which you then can extrude into the 3D shape required. and that allowed me to create the sides of the case. I extruded the sketch above two times, once with a height of 2mm for the part under the PCB and once with a height of 7mm for the part above the PCB.
 making an opening for the USB connector was nothing more than creating a box a little bigger than the USB plug and then subtracting it from the shape of the case. the result is shown here, both the top and bottom are already in their correct position, and you can imagine the PCB fitting in between them.
 
-<Lightbox><img alt="3D Model for the sides" src="/static/images/online_meetings3_3.png" style="width:600px;" /></Lightbox>
+<Image path="/static/images/online_meetings3_3.png" alt="3D Model for the sides" thumbnail_width="600" />
 
 3D model for printing the sides of the case
 
 I also uploaded a slightly different version of that exported dxf file to the [website](http://www.laserlokaal.nl) of a company that would laser-cut the top and bottom acrylic for me.
 
-<Lightbox><img alt="lasercut dxf design" src="/static/images/online_meetings3_4.png" style="width:600px;" /></Lightbox>
+<Image path="/static/images/online_meetings3_4.png" alt="lasercut dxf design" thumbnail_width="600" />
 
 The featured picture is a rendering done within Fusion360, all the 3D models for the electronic parts were found on grabcad.com except for the 3-way switch, but from the part shop I bought the part from, there was a possibility to render a CAD model for that part.
 Fusion360 also can do animations. so here is one for an exploding view, which really shows you how it all fits together:
 
-<Lightbox><img alt="Exploding view animation" src="/static/images/online_meetings3_5.gif" style="width:600px;" /></Lightbox>
+<Image path="/static/images/online_meetings3_5.gif" alt="Exploding view animation" thumbnail_width="600" />
 
 So what did it all cost me?
 

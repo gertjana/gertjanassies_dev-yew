@@ -9,10 +9,6 @@ image: ""
 summary: "Does AI make me more productive?"
 ---
 
-<script lang="ts">
-    import { Lightbox } from 'svelte-lightbox';
-</script>
-
 For a long time I wanted to write an application where I could just drop a note, a link to a post or article, an image etc. as one action, and then later being able to retrieve it.
 
 With the advance of AI, I thought about using AI to classify the content, say put some tags on ot, and then later use those tags to query the content.

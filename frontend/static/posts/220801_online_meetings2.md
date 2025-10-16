@@ -10,9 +10,6 @@ published: true
 
 ---
 
-<script lang="ts">
-    import { Lightbox } from 'svelte-lightbox';
-</script>
 A while ago I blogged about a small project with a Raspberry Pi Pico and a couple of buttons to make a tool that could help me in all those online meetings when we all had to work from home during Covid.
 
 I'm just explaining the changes here, so If you want to get the full picture, please read the first part of the article:

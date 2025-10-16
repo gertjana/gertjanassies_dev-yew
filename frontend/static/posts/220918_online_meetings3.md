@@ -11,10 +11,6 @@ published: true
 
 ---
 
-<script lang="ts">
-  import { Lightbox } from 'svelte-lightbox';
-</script>
-
 ## Wrapping it up, in a case actually
 
 In the previous two blogs, I explained the idea and execution of a small device that would allow me to mute/unmute audio/video and raise a hand in video calls with hangouts, zoom or teams.

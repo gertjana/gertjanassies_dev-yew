@@ -27,7 +27,7 @@ I use this blog to experiment with cutting-edge web technologies. This iteration
 
 The Makefile has plenty of hints
 
-```bash
+```
 > make help
 Available targets:
   help                 Show this help message

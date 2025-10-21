@@ -15,36 +15,6 @@ I use this blog to experiment with cutting-edge web technologies. This iteration
 - **WebAssembly**: Running Rust code in the browser with near-native performance
 - **Modern Web Patterns**: Single-page applications, component architecture
 
-## Features
-
-- **📝 Markdown-based Content**: All posts written in Markdown with YAML frontmatter
-- **🎨 Syntax Highlighting**: Custom Prism.js integration for code blocks
-- **🏗️ Build-time Optimization**: Automatic post discovery during compilation
-- **📱 Responsive Design**: Mobile-first design with clean typography
-- **🔍 Content Filtering**: Filter posts by categories, tags, and featured status
-- **⚡ Fast Performance**: WASM-compiled Rust for optimal performance
-
-## Architecture
-
-```
-src/
-├── app.rs              # Main app and routing
-├── components/         # Modular components
-│   ├── header.rs       # Navigation header
-│   ├── footer.rs       # Site footer
-│   ├── homepage.rs     # Homepage with featured posts
-│   ├── blogpage.rs     # Blog archive page
-│   ├── aboutpage.rs    # About page
-│   ├── notfoundpage.rs # 404 error page
-│   └── posts.rs        # Post listing and individual post views
-└── main.rs             # Application entry point
-
-static/
-├── posts/              # Markdown blog posts
-├── images/             # Post images and assets
-└── styles/             # Additional CSS/themes
-```
-
 ## Getting Started
 
 ### Prerequisites
@@ -55,15 +25,23 @@ static/
 
 ### Development
 
+The Makefile has plenty of hints
+
 ```bash
-# Start development server with hot reload
-trunk serve
-
-# Build for production
-trunk build --release
-
-# Run tests
-cargo test
+> make help
+Available targets:
+  help                 Show this help message
+  build                Build the project
+  build-release        Build in release mode
+  build-frontend       Build frontend only
+  build-server         Build server only
+  build-frontend-web   Build frontend with Trunk (release)
+  test                 Run all tests
+  clean                Clean build artifacts
+  serve-frontend       Start frontend development server
+  run-server           Run the page stats server
+  docker-build         Build Docker image
+  check                Check workspace for errors
 ```
 
 ### Adding Content
@@ -71,15 +49,42 @@ cargo test
 1. Create a new `.md` file in `static/posts/` with the format: `YYMMDD_post_title.md`
 2. Add YAML frontmatter with title, date, tags, etc.
 3. Write your content in Markdown
-4. Rebuild - posts are automatically discovered at compile time!
+4. Use custom components like `<Image />` for enhanced interactivity
+5. Rebuild - posts are automatically discovered at compile time!
+
+
+## Custom Components in Markdown
+
+This blog features a custom markdown parser that allows embedding Yew components directly in markdown files:
+
+### Available Components
+
+- **`<Image />`**: Interactive image component with modal overlay
+  - Props: `path`, `alt`, `thumbnail_width`, `class`
+  - Example: `<Image path="/static/images/photo.png" alt="Description" thumbnail_width="600" />`
+
+
+
+### Adding New Components
+
+1. Create your component in `src/components/`
+2. Implement the `MarkdownRenderable` trait
+3. Register it in `src/markdown.rs` in the `COMPONENT_REGISTRY`
+4. Use it in any markdown file with the component syntax
+
+See `src/components/image.rs` for a reference implementation.
 
 ## Technical Highlights
 
 - **Component Architecture**: Clean separation with individual files for each page component
+- **Component-Aware Markdown**: Custom parser that supports embedding Yew components in markdown content
+- **Interactive Image Modals**: Built-in `<Image />` component with thumbnail/fullsize modal viewing
 - **Compile-time Post Discovery**: Build script automatically finds and indexes all blog posts
 - **Custom Syntax Highlighting**: Tailored Prism.js implementation optimized for WASM
-- **Responsive Typography**: Roboto fonts for headers, FiraCode for code blocks
+- **Math Rendering**: KaTeX integration for rendering LaTeX equations in posts
+- **Modern Typography**: Custom web fonts - RedHat Text for body, FiraCode for code blocks
 - **Modern CSS**: Flexbox/Grid layouts with mobile-first responsive design
+- **Optimized Watch Configuration**: Smart file watching to prevent rebuild loops during development
 
 ## Docker Deployment
 
@@ -123,8 +128,3 @@ See `deploy/ENV_VARIABLES.md` for detailed configuration options.
 ## License
 
 MIT
-
----
-
-*This blog is a continuous experiment in web technologies and personal expression. Expect occasional technical deep-dives alongside random musings about code, the maker space, and life.*
-# Automated Deployments Enabled

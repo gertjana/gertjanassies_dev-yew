@@ -45,3 +45,11 @@ Software Development professional with over 25 years of experience where I've do
 
 Find me online in these places
 <OnlinePlaces />
+
+### Acknowledgements
+
+ * All code is written in [Rust](https://rust-lang.org/)
+ * Uses [Yew](https://yew.rs) WASM Component based web framework
+ * All the icons come from the following:
+   * [Simple Icons](https://simpleicons.org/)
+   * [SVG Repo](https://www.svgrepo.com/)

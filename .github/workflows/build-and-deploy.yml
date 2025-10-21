@@ -15,16 +15,183 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push:
+  # Job 1: Build and test backend (Rust server)
+  build-backend:
     runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt, clippy
+
+    - name: Cache Cargo registry
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-registry-
+
+    - name: Cache Cargo index
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-git-
+
+    - name: Cache Cargo build
+      uses: actions/cache@v4
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-build-backend-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-build-backend-
+
+    - name: Check backend code formatting
+      run: cargo fmt --check -p page-stats-server
+
+    - name: Run backend clippy
+      run: cargo clippy -p page-stats-server -- -D warnings
+
+    - name: Build backend
+      run: cargo build --release -p page-stats-server
+
+    - name: Upload backend artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-binary
+        path: target/release/page-stats-server
+        retention-days: 1
+
+  # Job 2: Build frontend (Yew/WASM)
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: wasm32-unknown-unknown
+        components: rustfmt, clippy
+
+    - name: Cache Cargo registry
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-registry-
+
+    - name: Cache Cargo index
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-git-
+
+    - name: Cache Cargo build (WASM)
+      uses: actions/cache@v4
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-build-wasm-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-build-wasm-
+
+    - name: Install Trunk
+      uses: jetli/trunk-action@v0.5.0
+      with:
+        version: 'latest'
+
+    - name: Check frontend code formatting
+      run: cargo fmt --check -p gertjanassies_dev-yew
+
+    - name: Run frontend clippy
+      run: cargo clippy -p gertjanassies_dev-yew --target wasm32-unknown-unknown -- -D warnings
+
+    - name: Build frontend
+      run: |
+        cd frontend
+        trunk build --release
+
+    - name: Upload frontend artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-dist
+        path: dist/
+        retention-days: 1
+
+  # Job 3: Run tests (can run in parallel with builds)
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Cache Cargo registry
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-registry-
+
+    - name: Cache Cargo index
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-git-
+
+    - name: Cache Cargo build (test)
+      uses: actions/cache@v4
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-build-test-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-build-test-
+
+    - name: Run tests
+      run: cargo test --workspace
+
+  # Job 4: Build and push Docker image (depends on successful builds and tests)
+  build-docker:
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-frontend, test]
     permissions:
       contents: read
       packages: write
+    outputs:
+      image-tag: ${{ steps.tag.outputs.tag }}
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Download backend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: backend-binary
+        path: target/release/
+
+    - name: Download frontend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: frontend-dist
+        path: dist/
+
+    - name: Make backend binary executable
+      run: chmod +x target/release/page-stats-server
 
     - name: Install Rust (for version extraction only)
       uses: dtolnay/rust-toolchain@stable
@@ -47,6 +214,9 @@ jobs:
       run: |
         TAG="${{ steps.version.outputs.version }}-${{ steps.git-hash.outputs.hash }}"
         echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
     - name: Log in to Container Registry
       uses: docker/login-action@v3
@@ -74,6 +244,8 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Output image details
       run: |
@@ -82,9 +254,15 @@ jobs:
         echo "Tags: ${{ steps.meta.outputs.tags }}"
         echo "Version: ${{ steps.tag.outputs.tag }}"
 
-    - name: Deploy to Render (main branch only)
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  # Job 5: Deploy to Render (only on main branch, depends on successful Docker build)
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-docker
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+    - name: Deploy to Render
       run: |
+        echo "Deploying version: ${{ needs.build-docker.outputs.image-tag }}"
         curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
       env:
         RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}

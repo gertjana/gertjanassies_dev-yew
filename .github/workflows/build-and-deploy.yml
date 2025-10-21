@@ -46,7 +46,7 @@ jobs:
     - name: Cache Cargo build
       uses: actions/cache@v4
       with:
-        path: target
+        path: target-backend
         key: ${{ runner.os }}-cargo-build-backend-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           ${{ runner.os }}-cargo-build-backend-
@@ -55,25 +55,25 @@ jobs:
       run: cargo fmt --check -p page-stats-server
 
     - name: Run backend clippy
-      run: cargo clippy -p page-stats-server -- -D warnings
+      run: cargo clippy -p page-stats-server --target-dir target-backend -- -D warnings
 
     - name: Build backend
-      run: cargo build --release -p page-stats-server
+      run: cargo build --release -p page-stats-server --target-dir target-backend
 
     - name: Install optimization tools
       run: sudo apt-get update && sudo apt-get install -y upx-ucl binutils
 
     - name: Optimize backend binary
       run: |
-        strip target/release/page-stats-server
-        upx --best --lzma target/release/page-stats-server
-        ls -lh target/release/page-stats-server
+        strip target-backend/release/page-stats-server
+        upx --best --lzma target-backend/release/page-stats-server
+        ls -lh target-backend/release/page-stats-server
 
     - name: Upload backend artifact
       uses: actions/upload-artifact@v4
       with:
         name: backend-binary
-        path: target/release/page-stats-server
+        path: target-backend/release/page-stats-server
         retention-days: 1
 
   # Job 2: Build frontend (Yew/WASM)
@@ -108,7 +108,7 @@ jobs:
     - name: Cache Cargo build (WASM)
       uses: actions/cache@v4
       with:
-        path: target
+        path: target-wasm
         key: ${{ runner.os }}-cargo-build-wasm-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           ${{ runner.os }}-cargo-build-wasm-
@@ -122,12 +122,12 @@ jobs:
       run: cargo fmt --check -p gertjanassies_dev-yew
 
     - name: Run frontend clippy
-      run: cargo clippy -p gertjanassies_dev-yew --target wasm32-unknown-unknown -- -D warnings
+      run: cargo clippy -p gertjanassies_dev-yew --target wasm32-unknown-unknown --target-dir target-wasm -- -D warnings
 
     - name: Build frontend
       run: |
         cd frontend
-        trunk build --release
+        CARGO_TARGET_DIR=../target-wasm trunk build --release
 
     - name: Upload frontend artifact
       uses: actions/upload-artifact@v4
@@ -165,13 +165,13 @@ jobs:
     - name: Cache Cargo build (test)
       uses: actions/cache@v4
       with:
-        path: target
+        path: target-test
         key: ${{ runner.os }}-cargo-build-test-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           ${{ runner.os }}-cargo-build-test-
 
     - name: Run tests
-      run: cargo test --workspace
+      run: cargo test --workspace --target-dir target-test
 
   # Job 4: Build and push Docker image (depends on successful builds and tests)
   build-docker:

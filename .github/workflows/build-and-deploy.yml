@@ -60,6 +60,15 @@ jobs:
     - name: Build backend
       run: cargo build --release -p page-stats-server
 
+    - name: Install optimization tools
+      run: sudo apt-get update && sudo apt-get install -y upx-ucl binutils
+
+    - name: Optimize backend binary
+      run: |
+        strip target/release/page-stats-server
+        upx --best --lzma target/release/page-stats-server
+        ls -lh target/release/page-stats-server
+
     - name: Upload backend artifact
       uses: actions/upload-artifact@v4
       with:

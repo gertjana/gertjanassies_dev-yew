@@ -1,0 +1,38 @@
+# Dockerfile optimized for CI/CD with pre-built artifacts
+# This assumes backend binary and frontend dist/ are provided
+
+FROM nginx:alpine
+
+LABEL maintainer="Gertjan Assies"
+LABEL org.opencontainers.image.authors="Gertjan Assies"
+LABEL org.opencontainers.image.source="https://github.com/gertjana/gertjanassies_dev-yew"
+
+# Install supervisor and dependencies
+RUN apk add --no-cache supervisor ca-certificates && \
+    mkdir -p /etc/supervisor/conf.d /var/log/supervisor /var/run && \
+    rm -rf /var/cache/apk/*
+
+# Copy nginx configuration
+COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy pre-built frontend (from GitHub Actions artifact)
+COPY dist /usr/share/nginx/html
+
+# Copy pre-built backend binary (from GitHub Actions artifact)
+COPY target/release/page-stats-server /usr/local/bin/page-stats-server
+
+# Make backend binary executable
+RUN chmod +x /usr/local/bin/page-stats-server
+
+# Copy supervisor configuration
+COPY deploy/supervisord.conf /etc/supervisord.conf
+
+# Environment variables
+ENV REDIS_URL=redis://127.0.0.1:6379
+ENV APP_ENV=production
+ENV PAGE_STATS_PORT=3001
+ENV PAGE_STATS_HOST=127.0.0.1
+
+EXPOSE 80
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]

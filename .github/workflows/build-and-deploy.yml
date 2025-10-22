@@ -288,7 +288,7 @@ jobs:
         sarif_file: 'trivy-results.sarif'
 
     - name: Upload Trivy results as artifact (fallback)
-      if: github.ref == 'refs/heads/main' && always()
+      if: github.ref == 'refs/heads/main' && (success() || failure())
       uses: actions/upload-artifact@v4
       with:
         name: trivy-scan-results

@@ -180,6 +180,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     outputs:
       image-tag: ${{ steps.tag.outputs.tag }}
 
@@ -262,6 +263,22 @@ jobs:
         echo "Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
         echo "Tags: ${{ steps.meta.outputs.tags }}"
         echo "Version: ${{ steps.tag.outputs.tag }}"
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@0.28.0
+      with:
+        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        severity: 'CRITICAL,HIGH'
+        ignore-unfixed: true
+        exit-code: '0'
+
+    - name: Upload Trivy results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
 
   # Job 5: Deploy to Render (only on main branch, depends on successful Docker build)
   deploy:

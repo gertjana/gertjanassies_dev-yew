@@ -9,7 +9,6 @@ pub struct PageStats {
     pub reads: u64,
     pub views: u64,
     pub likes: u64,
-    /// Estimated reading time in seconds (calculated once based on word count)
     pub time: u64,
 }
 

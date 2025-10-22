@@ -10,6 +10,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -265,6 +270,7 @@ jobs:
         echo "Version: ${{ steps.tag.outputs.tag }}"
 
     - name: Run Trivy vulnerability scanner
+      if: github.ref == 'refs/heads/main'
       uses: aquasecurity/trivy-action@0.28.0
       with:
         image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
@@ -275,10 +281,19 @@ jobs:
         exit-code: '0'
 
     - name: Upload Trivy results to GitHub Security tab
+      if: github.ref == 'refs/heads/main' && always()
+      continue-on-error: true
       uses: github/codeql-action/upload-sarif@v3
-      if: always()
       with:
         sarif_file: 'trivy-results.sarif'
+
+    - name: Upload Trivy results as artifact (fallback)
+      if: github.ref == 'refs/heads/main' && (success() || failure())
+      uses: actions/upload-artifact@v4
+      with:
+        name: trivy-scan-results
+        path: trivy-results.sarif
+        retention-days: 30
 
   # Job 5: Deploy to Render (only on main branch, depends on successful Docker build)
   deploy:

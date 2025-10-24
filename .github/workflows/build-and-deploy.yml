@@ -274,26 +274,58 @@ jobs:
       uses: aquasecurity/trivy-action@0.28.0
       with:
         image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
-        format: 'sarif'
-        output: 'trivy-results.sarif'
+        format: 'table'
         severity: 'CRITICAL,HIGH'
         ignore-unfixed: true
         exit-code: '0'
 
+    - name: Run Trivy scanner for GitHub Security
+      if: github.ref == 'refs/heads/main'
+      continue-on-error: true
+      uses: aquasecurity/trivy-action@0.28.0
+      with:
+        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        severity: 'CRITICAL,HIGH'
+        ignore-unfixed: true
+
     - name: Upload Trivy results to GitHub Security tab
-      if: github.ref == 'refs/heads/main' && always()
+      if: github.ref == 'refs/heads/main'
       continue-on-error: true
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: 'trivy-results.sarif'
 
-    - name: Upload Trivy results as artifact (fallback)
-      if: github.ref == 'refs/heads/main' && (success() || failure())
+    - name: Upload Trivy results as artifact
+      if: github.ref == 'refs/heads/main' && always()
       uses: actions/upload-artifact@v4
       with:
         name: trivy-scan-results
         path: trivy-results.sarif
         retention-days: 30
+
+    - name: Comment vulnerability summary on commit
+      if: github.ref == 'refs/heads/main' && always()
+      run: |
+        echo "## 🔒 Trivy Security Scan Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Image:** \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Summary" >> $GITHUB_STEP_SUMMARY
+        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+          aquasec/trivy:latest image \
+          --severity CRITICAL,HIGH \
+          --ignore-unfixed \
+          --format json \
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }} | \
+          jq -r '
+            .Results[] |
+            select(.Vulnerabilities != null) |
+            .Vulnerabilities[] |
+            select(.Severity == "CRITICAL" or .Severity == "HIGH") |
+            "- **\(.Severity)** [\(.VulnerabilityID)](\(.PrimaryURL // "N/A")): \(.Title // .Description // "No description") in `\(.PkgName)` (installed: `\(.InstalledVersion)`, fixed: `\(.FixedVersion // "N/A")`)"
+          ' >> $GITHUB_STEP_SUMMARY 2>/dev/null || echo "✅ No HIGH or CRITICAL vulnerabilities found!" >> $GITHUB_STEP_SUMMARY
 
   # Job 5: Deploy to Render (only on main branch, depends on successful Docker build)
   deploy:

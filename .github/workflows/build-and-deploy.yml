@@ -269,16 +269,6 @@ jobs:
         echo "Tags: ${{ steps.meta.outputs.tags }}"
         echo "Version: ${{ steps.tag.outputs.tag }}"
 
-    - name: Run Trivy vulnerability scanner
-      if: github.ref == 'refs/heads/main'
-      uses: aquasecurity/trivy-action@0.28.0
-      with:
-        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
-        format: 'table'
-        severity: 'CRITICAL,HIGH'
-        ignore-unfixed: true
-        exit-code: '0'
-
     - name: Run Trivy scanner for GitHub Security
       if: github.ref == 'refs/heads/main'
       continue-on-error: true

@@ -184,6 +184,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-backend, build-frontend, test]
     permissions:
+      actions: read
       contents: read
       packages: write
       security-events: write

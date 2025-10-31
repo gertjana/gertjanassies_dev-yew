@@ -71,11 +71,28 @@ document.addEventListener('DOMContentLoaded', initCopyButtons);
 
 // Re-initialize when content changes (for Yew/WASM dynamic content)
 const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-        if (mutation.addedNodes.length) {
-            initCopyButtons();
+    // Check if any added nodes contain copy buttons before re-initializing
+    let shouldInit = false;
+    for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+            // Check if node is an element and contains or is a copy button
+            if (node.nodeType === 1) { // ELEMENT_NODE
+                if (node.classList && node.classList.contains('copy-code-button')) {
+                    shouldInit = true;
+                    break;
+                }
+                if (node.querySelector && node.querySelector('.copy-code-button')) {
+                    shouldInit = true;
+                    break;
+                }
+            }
         }
-    });
+        if (shouldInit) break;
+    }
+    
+    if (shouldInit) {
+        initCopyButtons();
+    }
 });
 
 // Start observing the document body for changes

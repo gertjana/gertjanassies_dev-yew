@@ -150,14 +150,14 @@ pub fn render_markdown_to_html(markdown: &str) -> String {
                 };
                 events.push(Event::Html(
                     format!(
-                        r#"<pre class="language-{}"><code class="language-{}">"#,
+                        r#"<div class="code-block-wrapper"><button class="copy-code-button" aria-label="Copy code to clipboard" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button><pre class="language-{}"><code class="language-{}">"#,
                         code_language, code_language
                     )
                     .into(),
                 ));
             }
             Event::End(TagEnd::CodeBlock) => {
-                events.push(Event::Html("</code></pre>".into()));
+                events.push(Event::Html("</code></pre></div>".into()));
             }
             _ => {
                 events.push(event);

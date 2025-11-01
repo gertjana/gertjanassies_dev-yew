@@ -89,7 +89,7 @@ const observer = new MutationObserver(function(mutations) {
         }
         if (shouldInit) break;
     }
-    
+
     if (shouldInit) {
         initCopyButtons();
     }

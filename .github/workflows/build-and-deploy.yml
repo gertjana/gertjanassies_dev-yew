@@ -325,6 +325,11 @@ jobs:
     needs: build-docker
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
+    - name: Create deployment
+      uses: chrnorm/deployment-action@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        environment: production
     - name: Deploy to Render
       run: |
         echo "Deploying version: ${{ needs.build-docker.outputs.image-tag }}"

@@ -4,7 +4,7 @@ author: Gertjan Assies
 date: "2022-08-01"
 category: make
 tags: pico, kicad, python
-image: "/static/images/online_meetings2_top.png"
+image: "/content/images/online_meetings2_top.png"
 summary: "Some improvements to the original design"
 published: true
 
@@ -22,7 +22,7 @@ Now it works pretty well but there were some improvements to be made
 
 A 3-way slider switch should do the trick, now my schematic looks like this (power comes from the USB connector):
 
-<Image path="/static/images/online_meetings2_1.png" alt="Schematic" thumbnail_width="600" />
+<Image path="/content/images/online_meetings2_1.png" alt="Schematic" thumbnail_width="600" />
 
 All I need is a change in the code to check GPIO13, 14 and 15 and whichever one is 0/false/low I had to set the keymap for the right conference tool.
 Because I configured the GPIO ports to use a pull-up resistor an open switch will be 1 (resistor pulls the input to the + Voltage) and closing the switch will pull it to 0 (ground) with the resistor protecting it from shortening out.
@@ -63,12 +63,12 @@ One thing with Electronic design software is always having the right part librar
 
 The switch part took a bit longer, I had already ordered and received the switch, but it wasn't in the library, fortunately, its little brother a 2-way switch was. as you can see in the screenshot
 
-<Image path="/static/images/online_meetings2_3.png" alt="PCB_key_2way" thumbnail_width="600" />
+<Image path="/content/images/online_meetings2_3.png" alt="PCB_key_2way" thumbnail_width="600" />
 
 Now the switch I had looked exactly the same but it had one more pin and some more spacing.
 So in KiCad's footprint editor, I copied the one above. saw that the pad spacing was 2 mm. so I could move on off the outer pins to the left and duplicate one of the other pins. update the pin numbers in the properties to match up with the 3-way switch schematic part. and for completeness updated the silkscreen mask and part number.
 
-<Image path="/static/images/online_meetings2_4.png" alt="PCB_key_3way" thumbnail_width="600" />
+<Image path="/content/images/online_meetings2_4.png" alt="PCB_key_3way" thumbnail_width="600" />
 
 Now I have all the parts that I need, in the schematic, I assigned all the footprints to the relevant parts and after satisfying the Electrical Rules Checker I clicked Update PCB from Schematic.
 

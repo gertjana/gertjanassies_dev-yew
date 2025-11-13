@@ -8,7 +8,7 @@ use yew_router::prelude::*;
 
 use super::page_stats_display::PageStatsDisplay;
 use crate::app::Route;
-use crate::hooks::use_document_title;
+use crate::hooks::{use_meta_tags, MetaData};
 use crate::markdown::{
     load_markdown_content, parse_markdown_with_components, render_component_by_name,
     render_markdown_to_html,
@@ -426,18 +426,73 @@ pub fn post_view(props: &PostViewProps) -> Html {
             || ()
         });
     }
-    // Set dynamic document title using the hook
-    let title = if let Some(ref post) = *post_data {
-        format!(
-            "{} - gertjanassies.dev",
-            post.frontmatter.title.trim_matches([' ', '"'])
-        )
+    // Set dynamic document title and meta tags using the hook
+    let meta_data = if let Some(ref post) = *post_data {
+        let base_url = "https://gertjanassies.dev";
+        let post_url = format!("{}/post/{}", base_url, post.slug);
+        let post_image = if !post.frontmatter.image.is_empty() {
+            Some(format!("{}{}", base_url, post.frontmatter.image))
+        } else {
+            Some(format!("{}/static/logo_ga.svg", base_url))
+        };
+
+        // Parse date to ISO format if possible
+        let iso_date = if !post.frontmatter.date.is_empty() {
+            // Assuming date is in YYYYMMDD format, convert to ISO
+            if post.frontmatter.date.len() == 8 {
+                let year = &post.frontmatter.date[0..4];
+                let month = &post.frontmatter.date[4..6];
+                let day = &post.frontmatter.date[6..8];
+                let date = format!("{}-{}-{}", year, month, day);
+                Some(format!("{date}T00:00:00Z"))
+            } else {
+                Some(format!("{}T00:00:00Z", post.frontmatter.date))
+            }
+        } else {
+            None
+        };
+
+        MetaData {
+            title: format!(
+                "{} - gertjanassies.dev",
+                post.frontmatter.title.trim_matches([' ', '"'])
+            ),
+            description: if !post.frontmatter.summary.is_empty() {
+                Some(post.frontmatter.summary.clone())
+            } else {
+                Some(
+                    "Gertjan Assies personal blog, articles about coding and the maker space"
+                        .to_string(),
+                )
+            },
+            url: Some(post_url),
+            image: post_image,
+            article_author: if !post.frontmatter.author.is_empty() {
+                Some(post.frontmatter.author.clone())
+            } else {
+                Some("Gertjan Assies".to_string())
+            },
+            article_published_time: iso_date,
+            article_tag: if !post.frontmatter.tags.is_empty() {
+                Some(post.frontmatter.tags.clone())
+            } else {
+                None
+            },
+            twitter_card_type: Some("summary_large_image".to_string()),
+        }
     } else if *loading {
-        "Loading... - gertjanassies.dev".to_string()
+        MetaData {
+            title: "Loading... - gertjanassies.dev".to_string(),
+            ..Default::default()
+        }
     } else {
-        "Post Not Found - gertjanassies.dev".to_string()
+        MetaData {
+            title: "Post Not Found - gertjanassies.dev".to_string(),
+            ..Default::default()
+        }
     };
-    use_document_title(&title);
+
+    use_meta_tags(meta_data);
 
     if *loading {
         return html! {
@@ -616,7 +671,7 @@ include!(concat!(env!("OUT_DIR"), "/post_slugs.rs"));
 
 // Load full post content including markdown body
 pub async fn load_post(slug: &str) -> Result<Post, String> {
-    let url = format!("/static/posts/{}.md", slug);
+    let url = format!("/content/posts/{}.md", slug);
     let raw_content = load_markdown_content(&url).await?;
     Ok(parse_full_post(&raw_content, slug))
 }
@@ -693,7 +748,7 @@ async fn load_all_posts() -> Result<Vec<PostSummary>, String> {
 
 // Load just the frontmatter from a post (not the full content)
 async fn load_post_frontmatter(slug: &str) -> Result<PostSummary, String> {
-    let url = format!("/static/posts/{}.md", slug);
+    let url = format!("/content/posts/{}.md", slug);
     let raw_content = load_markdown_content(&url).await?;
     Ok(parse_post_frontmatter_only(&raw_content, slug))
 }

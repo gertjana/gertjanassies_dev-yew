@@ -4,7 +4,7 @@ author: Gertjan Assies
 date: "2023-02-01"
 tags: terminal, fish, iterm2, brew
 category: tooling
-image: "/static/images/an_opinionated_terminal_top.jpg"
+image: "/content/images/an_opinionated_terminal_top.jpg"
 summary: "As a Site Reliability / Software Engineer I'm a bit opinionated when it comes to the tool I use most of the time: The command line."
 published: true
 
@@ -87,7 +87,7 @@ end
 
 In the end it looks like this:
 
-<Image path="/static/images/an_opinionated_terminal_1.png" alt="terminal screenshot" thumbnail_width="600" />
+<Image path="/content/images/an_opinionated_terminal_1.png" alt="terminal screenshot" thumbnail_width="600" />
 
 Hopefully I showed you some things, that might make your commandline experience a bit more pleasurable.
 

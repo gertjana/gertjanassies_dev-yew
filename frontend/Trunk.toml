@@ -5,4 +5,4 @@ dist = "../dist"
 public_url = "/"
 
 [watch]
-watch = ["src/", "index.html", "index.scss", "static/"]
+watch = ["src/", "index.html", "index.scss", "static/", "../content/"]

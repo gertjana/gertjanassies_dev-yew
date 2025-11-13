@@ -5,7 +5,7 @@ date: "2024-01-25"
 category: code, make
 tags: rust, embedded, esp32, featured
 published: true
-image: "/static/images/rusty_charger.webp"
+image: "/content/images/rusty_charger.webp"
 summary: "Focusing on the minimal hardware needed to build an EV Charger with Rust on a ESP32"
 ---
 
@@ -29,7 +29,7 @@ A simple as possible charger should:
 
 Putting all this into a schematic it looks something like this:
 
-<Image path="/static/images/schematic2.png" alt="Schematic" thumbnail_width="600" />
+<Image path="/content/images/schematic2.png" alt="Schematic" thumbnail_width="600" />
 
 ## Managing State
 
@@ -40,7 +40,7 @@ A FSM works as follows:
 
 Whenever something happens (an InputEvent), a cable gets inserted/removed or some form of authentication is provided, a transision is made from one state to the next, resulting in an output event, for instance to tell the charger to lock the cable and start charging.
 
-<Image path="/static/images/charger_eps32_state_diagram.png" alt="FSM" thumbnail_width="600" />
+<Image path="/content/images/charger_eps32_state_diagram.png" alt="FSM" thumbnail_width="600" />
 
 Every Arrow is a `transition` call with the current `State` and an `InputEvent` to a new `State` with an `OutputEvent`.
 
@@ -94,7 +94,7 @@ So now all it left is a bit of logic to do the transitions whenever an event hap
     }
 ```
 
-<Image path="/static/images/pullupresistor.png" alt="Application Model" thumbnail_width="600" />
+<Image path="/content/images/pullupresistor.png" alt="Application Model" thumbnail_width="600" />
 
 The GPIO Port is configured as input with an pull-up resistor with the button connected to ground, meaning whenever the button is pressed, it will connect the input to ground (0) and when released the pull-up resistor will 'pull' it to teh +5V (1) again (creating a Positive Edge (0 -> 1) event).
 
@@ -126,7 +126,7 @@ write!(display, "Hello World");
 
 Here's how it looks on a breadboard, I'm using the button and led that are on the m5 Stamp to simulate the swiping of a card and displaying the charger state, a blue led to simulate the relay and a jumper to simulate the inserting of a cable.
 
-<Image path="/static/images/breadboard.png" alt="Breadboard" thumbnail_width="600" />
+<Image path="/content/images/breadboard.png" alt="Breadboard" thumbnail_width="600" />
 
 The next article will focus on sending and retrieving OCPP Messages to a backend by configuring the Wifi and MQTT Publisher and Subscriber.
 

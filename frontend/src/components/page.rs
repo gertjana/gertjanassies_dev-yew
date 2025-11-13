@@ -2,7 +2,7 @@ use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;
 
 use super::page_stats_display::PageStatsDisplay;
-use crate::hooks::use_document_title;
+use crate::hooks::{use_meta_tags, MetaData};
 use crate::markdown::{
     load_markdown_content, parse_markdown_with_components, render_component_by_name,
     render_markdown_to_html,
@@ -34,7 +34,7 @@ pub fn page(props: &PageProps) -> Html {
             let content_path = content_path.clone();
 
             spawn_local(async move {
-                let content_url = format!("/static/pages/{}.md", content_path);
+                let content_url = format!("/content/pages/{}.md", content_path);
 
                 match load_markdown_content(&content_url).await {
                     Ok(content) => {
@@ -85,15 +85,26 @@ pub fn page(props: &PageProps) -> Html {
         });
     }
 
-    // Set dynamic document title using the hook
-    let title = if !markdown_content.is_empty() {
-        format!("{} - gertjanassies.dev", props.content)
+    // Set meta tags for the page
+    let meta_data = if !markdown_content.is_empty() {
+        let page_url = format!("https://gertjanassies.dev/{}", props.content);
+        MetaData {
+            title: format!("{} - gertjanassies.dev", props.content),
+            url: Some(page_url),
+            ..Default::default()
+        }
     } else if *loading {
-        "Loading... - gertjanassies.dev".to_string()
+        MetaData {
+            title: "Loading... - gertjanassies.dev".to_string(),
+            ..Default::default()
+        }
     } else {
-        "Page Not Found - gertjanassies.dev".to_string()
+        MetaData {
+            title: "Page Not Found - gertjanassies.dev".to_string(),
+            ..Default::default()
+        }
     };
-    use_document_title(&title);
+    use_meta_tags(meta_data);
 
     if *loading {
         return html! {

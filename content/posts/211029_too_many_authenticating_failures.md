@@ -4,7 +4,7 @@ date: "2021-10-29"
 author: Gertjan Assies
 tags: tips, SSH
 category: tooling
-image: "/static/images/sorry_were_closed.jpg"
+image: "/content/images/sorry_were_closed.jpg"
 summary: "One morning I tried to login into a remote system using ssh and suddenly I got the above error.
 It took me a bit of time to figure out what the problem was.
 

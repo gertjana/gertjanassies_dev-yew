@@ -8,7 +8,7 @@ fn main() {
     let dest_path = Path::new(&out_dir).join("post_slugs.rs");
 
     // Path to the posts directory
-    let posts_dir = Path::new("static/posts");
+    let posts_dir = Path::new("../content/posts");
 
     let mut slugs = Vec::new();
 
@@ -47,7 +47,7 @@ fn main() {
     writeln!(file, "}}").unwrap();
 
     // Tell cargo to rerun this build script if the posts directory changes
-    println!("cargo:rerun-if-changed=static/posts");
+    println!("cargo:rerun-if-changed=../content/posts");
 
     println!("Generated post slugs: {:?}", slugs);
 }

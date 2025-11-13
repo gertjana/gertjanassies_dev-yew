@@ -5,7 +5,7 @@ date: "2023-10-10"
 category: code
 tags: redis, dragonflydb, tip
 published: true
-image: "/static/images/migration.jpg"
+image: "/content/images/migration.jpg"
 summary: "Migrating from redis to dragonflydb for this blog."
 ---
 

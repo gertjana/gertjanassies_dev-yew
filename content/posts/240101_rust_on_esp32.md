@@ -5,7 +5,7 @@ date: "2024-01-04"
 category: code, make
 tags: rust, embedded, esp32, featured
 published: true
-image: "/static/images/rust_on_esp32.png"
+image: "/content/images/rust_on_esp32.png"
 summary: "Creating applications for ESP32 microcontrollers with the power of the Rust programming language."
 ---
 
@@ -36,7 +36,7 @@ Therefore I will focus on the higher level `std` approach which allows the use o
 
 The application model for the `std` mode look like this:
 
-<Image path="/static/images/application_model_light.png" alt="Application Model" thumbnail_width="600" />
+<Image path="/content/images/application_model_light.png" alt="Application Model" thumbnail_width="600" />
 
 The following libraries are made available
 
@@ -68,7 +68,7 @@ As my daily work is all about allowing EV Drivers to charge their cars, I've dec
 
 For this I need to control GPIO (General Purpose Input Output) Pins to enable charging (relay), lock the cable (solenoid), display the charger state (multicolor led) and communicate to a backend (MQTT / IoT)
 
-<Image path="/static/images/stamp_c3u_01.png" alt="Application Model" thumbnail_width="600" />
+<Image path="/content/images/stamp_c3u_01.png" alt="Application Model" thumbnail_width="600" />
 
 ### hardware
 

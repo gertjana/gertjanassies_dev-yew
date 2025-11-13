@@ -4,7 +4,7 @@ author: Gertjan Assies
 date: "2022-05-28"
 category: code
 tags: go, functional, option, experiment, featured
-image: "/static/images/optional_go_top.jpg"
+image: "/content/images/optional_go_top.jpg"
 summary: "This blog post is an thought experiment in how a functional programming concept could be implemented in the Go language."
 published: true
 

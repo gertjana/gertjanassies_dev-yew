@@ -4,7 +4,7 @@ author: Gertjan Assies
 date: "2022-08-13"
 category: code
 tags: docker, go, scratch, optimization
-image: "/static/images/smaller_docker_containers_top.jpg"
+image: "/content/images/smaller_docker_containers_top.jpg"
 summary: How to create your docker containers as small as possible
 published: true
 

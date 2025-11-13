@@ -5,7 +5,7 @@ date: "2025-01-14"
 category: code, make
 tags: python, eink, development
 published: false
-image: "/static/images/eink-calendar.jpg"
+image: "/content/images/eink-calendar.jpg"
 summary: "Had an e-ink display laying around and some time"
 ---
 

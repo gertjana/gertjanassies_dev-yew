@@ -5,7 +5,7 @@ author: Gertjan Assies
 summary: Learning about Svelte by making a blog
 tags: sveltekit, markdown, typescript, mermaid, mdsvex
 category: code
-image: "/static/images/new_blog_top.jpg"
+image: "/content/images/new_blog_top.jpg"
 image_attribution: 'Courtesy of <a href="https://unsplash.com/s/photos/jess-bailey">Jess Bailey</a> on <a href="https://unsplash.com/">Unsplash</a>'
 published: true
 
@@ -70,7 +70,7 @@ author: Gertjan Assies
 summary: Learning about Svelte by making a blog
 tags: sveltekit, markdown, typescript, mermaid, mdsvex, featured
 category: code
-image: "/static/images/new_blog_top.jpg"
+image: "/content/images/new_blog_top.jpg"
 published: true
 
 ---

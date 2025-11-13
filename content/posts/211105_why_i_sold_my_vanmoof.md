@@ -4,7 +4,7 @@ author: Gertjan Assies
 date: "2021-11-05"
 category: life
 tags: cycling, vanmoof, ebike, quality, customerservice
-image: "/static/images/van_moof_top.jpg"
+image: "/content/images/van_moof_top.jpg"
 summary: "When brands grow fast, it's the quality that suffers, and that will cost you the customers that helped you grow in the first place."
 published: true
 

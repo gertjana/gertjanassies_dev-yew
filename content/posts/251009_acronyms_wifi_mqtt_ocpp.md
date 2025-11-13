@@ -5,7 +5,7 @@ date: "2025-10-09"
 category: code, make
 tags: rust, embedded, esp32, featured, mqtt, ocpp
 published: false
-image: "/static/images/charger_connect_cloud.png"
+image: "/content/images/charger_connect_cloud.png"
 summary: "How to connect to a backoffice"
 ---
 

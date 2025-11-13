@@ -4,7 +4,7 @@ author: Gertjan Assies
 date: "2022-11-02"
 category: code
 tags: aws, eks, oidc, python, boto3, featured
-image: "/static/images/eks_fine_grained_access.jpg"
+image: "/content/images/eks_fine_grained_access.jpg"
 summary: bind service accounts to IAM roles to allow fine grained access control from k8s resources.
 published: true
 

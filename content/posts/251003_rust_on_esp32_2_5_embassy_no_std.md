@@ -5,7 +5,7 @@ date: "2025-10-03"
 category: code, make
 tags: rust, embedded, esp32, featured, embassy
 published: true
-image: "/static/images/rust_embassy.png"
+image: "/content/images/rust_embassy.png"
 summary: "Rewriting the source code to better fit the ESP32 using no_std Rust and Embassy framework"
 ---
 
@@ -146,10 +146,10 @@ so we have:
 ## The State Machine
 
 Here's how the state machine looks:
-<Image path="/static/images/charger_state_machine.png" alt="State Machine" thumbnail_width="600" />
+<Image path="/content/images/charger_state_machine.png" alt="State Machine" thumbnail_width="600" />
 
 And if you're brave, here's the complete architecture, (every green or blue rectangle is an embassy task, all communication between tasks go through channels)
-<Image path="/static/images/charger_architecture.png" alt="architecture" thumbnail_width="600" />
+<Image path="/content/images/charger_architecture.png" alt="architecture" thumbnail_width="600" />
 
 ## Hardware
 
@@ -159,18 +159,18 @@ I added an addressable Multi color LED ([WS1218](https://cdn-shop.adafruit.com/d
 
 ### The updated schematic:
 
-<Image path="/static/images/charger_schematic.png" alt="Schematic" thumbnail_width="600" />
+<Image path="/content/images/charger_schematic.png" alt="Schematic" thumbnail_width="600" />
 
 ### A nice 3D Rendering made with Fusion360
 
-<Image path="/static/images/3d_render.png" alt="3D render" thumbnail_width="600" />
+<Image path="/content/images/3d_render.png" alt="3D render" thumbnail_width="600" />
 
 ### Front with Acrylate cover
 The 3D printed part covers the pins that might contain high voltages.
-<Image path="/static/images/charger_front.png" alt="Front PCB" thumbnail_width="600" />
+<Image path="/content/images/charger_front.png" alt="Front PCB" thumbnail_width="600" />
 
 ### Back showing ESP32-C6, connectors and Relay
-<Image path="/static/images/charger_back.png" alt="Back PCB" thumbnail_width="600" />
+<Image path="/content/images/charger_back.png" alt="Back PCB" thumbnail_width="600" />
 
 You can find all the schematic and PCB files in the kicad subdirectory of the [project](https://github.com/gertjana/charger-esp32c6-embassy/tree/main/kicad)
 

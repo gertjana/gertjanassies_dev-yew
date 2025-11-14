@@ -20,9 +20,9 @@ Software Development professional with over 25 years of experience where I've do
 
 | Area | Experience |
 |------|------------|
-| Software Engineering | C#, Java, Javascript, Python, Scala, Haskell, Go, Typescript, Rust |
+| Software Engineering | C#, Java, Javascript, Python, Scala, Elixir, Haskell, Go, Typescript, Rust |
 | Cloud Engineering | Certified AWS Solutions Architect associate, Certified Terraform practitioner |
-| Site Reliability Engineering | (the Google kind) CI/CD, Observability, Scalability,  |
+| Site Reliability Engineering | (the Google kind) CI/CD, Observability, Scalability  |
 | Agile | Certified Scrummaster, Certified Kanban Management Professional |
 | Leadership | Technical Product Owner / Teamlead |
 | Electronics Engineering | Embedded controllers, IoT, LoRa |
@@ -44,11 +44,12 @@ Software Development professional with over 25 years of experience where I've do
 ### Online Places
 
 Find me online in these places
+
 <OnlinePlaces />
 
 ### Acknowledgements
 
- * All code is written in [Rust](https://rust-lang.org/)
+ * All code for this website is written in [Rust] (https://rust-lang.org/)
  * Uses [Yew](https://yew.rs) WASM Component based web framework
  * All the icons come from the following:
    * [Simple Icons](https://simpleicons.org/)

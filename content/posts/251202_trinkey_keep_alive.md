@@ -86,7 +86,7 @@ Now you're ready to write code! The entire installation process takes about 5 mi
 **Development environment:**
 You can use any text editor you like. I personally use VS Code with the CircuitPython extension, but even Notepad works fine. Just edit the `code.py` file on the `CIRCUITPY` drive, save it, and your changes run immediately.
 
-in the end the files on the USB stick should look like this
+In the end the files on the USB stick should look like this
 
 ```
 CIRCUITPY/

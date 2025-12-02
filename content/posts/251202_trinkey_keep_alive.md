@@ -257,7 +257,7 @@ The `time.monotonic()` function gives us a steady clock that doesn't jump around
 
 ## Conclusion
 
-Building this keep-awake device was a perfect introduction to the makerspace world. In just an a couple of hours, with about €10 worth of hardware and around 100 lines of Python code, I created something useful that hopefully sparks the imagination.
+Building this keep-awake device was a perfect introduction to the makerspace world. In just a couple of hours, with about €10 worth of hardware and around 100 lines of Python code, I created something useful that hopefully sparks the imagination.
 
 **What makes this project special:**
 - **No complicated hardware**: Everything runs on a single, self-contained board

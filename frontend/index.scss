@@ -1425,3 +1425,173 @@ table tr:hover {
     background: rgba(0, 0, 0, 0.9);
   }
 }
+
+/* Authentication Guard Styles */
+.auth-checking {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem;
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+
+  .loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #2196f3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  p {
+    margin: 0;
+    color: #1976d2;
+    font-weight: 500;
+  }
+}
+
+.authenticated-content {
+  .auth-status-bar {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+
+    .auth-indicator {
+      color: #155724;
+      font-weight: 600;
+    }
+
+    .auth-type {
+      background: #155724;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.85rem;
+      font-family: 'FiraCode', monospace;
+    }
+
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &:hover {
+        background: #c82333;
+      }
+    }
+  }
+}
+
+.access-denied {
+  padding: 2rem;
+  text-align: center;
+
+  .access-denied-content {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-left: 4px solid #dc3545;
+
+    h2 {
+      color: #721c24;
+      margin-bottom: 1rem;
+    }
+
+    .auth-instructions {
+      text-align: left;
+      margin: 1.5rem 0;
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 4px;
+
+      h3 {
+        color: #495057;
+        margin-bottom: 0.5rem;
+      }
+
+      ol {
+        margin: 0.5rem 0 0 1rem;
+      }
+
+      li {
+        margin: 0.25rem 0;
+
+        code {
+          background: #e9ecef;
+          padding: 0.2rem 0.4rem;
+          border-radius: 3px;
+          font-family: 'FiraCode', monospace;
+          color: #d73527;
+        }
+      }
+    }
+
+    .demo-tokens {
+      background: #fff3cd;
+      padding: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ffeaa7;
+      margin: 1rem 0;
+
+      h4 {
+        margin-bottom: 0.5rem;
+        color: #856404;
+      }
+
+      ul {
+        margin: 0.5rem 0 0 1rem;
+        text-align: left;
+      }
+
+      li {
+        margin: 0.25rem 0;
+
+        code {
+          background: #fff;
+          padding: 0.2rem 0.4rem;
+          border-radius: 3px;
+          font-family: 'FiraCode', monospace;
+          color: #856404;
+          border: 1px solid #ffeaa7;
+        }
+      }
+    }
+
+    .retry-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 1rem;
+
+      &:hover {
+        background: #0056b3;
+      }
+    }
+  }
+}

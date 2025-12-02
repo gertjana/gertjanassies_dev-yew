@@ -273,7 +273,7 @@ Building this keep-awake device was a perfect introduction to the makerspace wor
 ### Next Steps
 
 If you want to extend this project, here are some ideas:
-- Play around with the color's and timings
+- Play around with the colors and timings
 - Make an annoyance device with no LEDs flashing, but randomly moves the mouse every now and then
 - Randomly let it type 'All your base are belong to us' every now and then
 - as a (not very secure) authentication device: store and let it type out your password when pressing one of the touch buttons

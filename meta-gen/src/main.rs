@@ -129,11 +129,12 @@ fn parse_yaml_frontmatter(yaml_str: &str) -> PostFrontmatter {
 }
 
 fn parse_post(raw: &str) -> Option<PostFrontmatter> {
-    if !raw.starts_with("---\n") {
+    let lines: Vec<&str> = raw.lines().collect();
+
+    // Require the first line (with any line ending) to be a frontmatter delimiter.
+    if lines.first().map(|l| l.trim()) != Some("---") {
         return None;
     }
-
-    let lines: Vec<&str> = raw.lines().collect();
     let mut frontmatter_end = None;
     let mut found_first = false;
 

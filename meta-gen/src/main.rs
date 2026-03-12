@@ -459,7 +459,7 @@ published: true"#;
         assert!(html.contains("article:published_time"));
         assert!(html.contains("2024-01-01T00:00:00Z"));
         assert!(html.contains("article:tag"));
-        assert!(html.contains("window.location.replace('/post/test_slug')"));
+        assert!(html.contains(r#"window.location.replace(window.location.pathname.replace(/\/index\.html?$/, ''))"#));
         assert!(html.contains("Test Post - gertjanassies.dev"));
     }
 

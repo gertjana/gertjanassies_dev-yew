@@ -1,11 +1,11 @@
 ---
-title: the Use of AI in Electronics design
+title: Experimenting with AI in FPGA Development
 date: "2026-03-10"
 author: Gertjan Assies
 category: code
 tags: fpga, llm, development, featured
 image: "/content/images/debugging_max1000.png"
-summary: implementing an SPI controller in an FPGA and testing if it works before adding an SPI Device"
+summary: implementing an SPI controller in an FPGA and testing if it works with a logic analyzer before adding an actual Device"
 published: true
 ---
 

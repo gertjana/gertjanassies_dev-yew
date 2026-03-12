@@ -189,12 +189,12 @@ fn generate_html(slug: &str, fm: &PostFrontmatter) -> String {
     };
 
     let description = escape_html(&fm.summary);
-    let url = format!("{}/post/{}", BASE_URL, slug);
+    let url = escape_html(&format!("{}/post/{}", BASE_URL, slug));
 
     let image = if fm.image.is_empty() {
-        format!("{}{}", BASE_URL, FALLBACK_IMAGE)
+        escape_html(&format!("{}{}", BASE_URL, FALLBACK_IMAGE))
     } else {
-        format!("{}{}", BASE_URL, fm.image)
+        escape_html(&format!("{}{}", BASE_URL, fm.image))
     };
 
     let author = escape_html(&fm.author);

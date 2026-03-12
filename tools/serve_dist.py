@@ -35,7 +35,8 @@ class TryFilesHandler(http.server.SimpleHTTPRequestHandler):
 
         for candidate in candidates:
             if candidate.is_file():
-                self.path = "/" + str(candidate.relative_to(DIST_DIR))
+                # Use POSIX-style separators for URL path regardless of OS
+                self.path = "/" + candidate.relative_to(DIST_DIR).as_posix()
                 break
 
         return super().do_GET()

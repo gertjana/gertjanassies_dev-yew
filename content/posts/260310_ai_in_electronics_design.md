@@ -15,9 +15,9 @@ As an exercise to see how 'good' LLM's are getting I've asked it to build a smal
 
 That is all working nice and dandy, giving me a chance to write some small assembly programs for it, bringing back fond memories from my youth.
 
-## Current situation
+## Improving the situation
 
-But where it comes to visualisation, the FPGA board has 8 leds in a row, which I use to show the Program counter and the Carry and Overflow flags and with a push of a button the contents of one of the 8bit registers.
+But where it comes to visualisation, the [MAX1000 FPGA board](https://www.trenz-electronic.de/en/MAX1000-IoT-Maker-Board-16kLE-32-MByte-RAM-8-MByte-Flash-6.15-x-2.5-cm/TEI0001-04-FBC84A) has 8 leds in a row, which I use to show the Program counter and the Carry and Overflow flags and with a push of a button the contents of one of the 8bit registers.
 
 For instance here it is running a program, that uses the SHL (Shift left) and SHR (Shift right) instructions to simulate the light pattern on the KITT car from the Knightrider television series
 
@@ -27,7 +27,7 @@ For instance here it is running a program, that uses the SHL (Shift left) and SH
 
 So lets add a small OLED Screen, the board has an 12 pin connector to interface with the outside world in a standardized manner, and you can buy amongst other things a 128x32 OLED Display based on the SSD1306 chip which has an SPI Interface to be able to control it.
 
-Now while the display is on order. I started the SPI Implementation. (It's a bit different from working with Arduino's as they have have loads of libraries available)
+Now while the display is on order. I started the SPI Implementation. (It's a bit different from working with Arduino's as they have loads of libraries available)
 
 SPI requires at least 4 wires
  - Enable (or Clock Select) low is telling the device on the other end. I'm going to send you some data now
@@ -35,13 +35,13 @@ SPI requires at least 4 wires
  - MOSI (Master out, Slave in) the actual data
  - Clock (Pulses for each data bit that is send out)
 
-So Opencode with Claude Sonnet 4.6 in plan mode, I started warming it up to the SPI implementation. giving it links the the SPI protocol itself and the datasheet for the SSD1306 Display model
+So Opencode with Claude Sonnet 4.6 in plan mode, I started warming it up to the SPI implementation. giving it links the the SPI protocol itself and the datasheet for the SSD1306 Display model and then asked it to implement a monitor that would show the content of the registers and flags, and the name of the program it is running.
 
 The resulting code is here [rtl/oled_monitor.v](https://github.com/gertjana/cpu_in_fpga/blob/pmod_spi/rtl/oled_monitor.v)
 
-So far so good It created the implementation and tests for the testbench simulator but I wanted to be more sure that it would work. the LLM had similar ideas, as it was asking about what should we do next?, one of it's suggestions was to hook up an logic analyzer so I could judge whether or not it was correctly implemented.
+So far so good It created the implementation and tests for the testbench simulator but I wanted to be more sure that it would work. the LLM had similar ideas, as it was asking about what should we do next? One of it's suggestions was to hook up an logic analyzer so I could judge whether or not it was correctly implemented.
 
-So I hooked up the logic analyzer, set the protocol to SPI, so it recognizes the bytes of data, and let it run for a bit, the result is shown below
+So I hooked up a [logic analyzer](https://www.saleae.com/logic), set the protocol to SPI, so it recognizes the bytes of data, and let it run for a bit, the result is shown below
 
 ![logic analyzer screenshot](/content/images/logic_analyzer.png)
 

@@ -76,6 +76,6 @@ This way of working proofs the LLM's can make you pretty productive, but you nee
 
 I also gave Claude the capture file with all the measurements, but that turned out to be too much for it. it went under and never surfaced again.
 
-What could we have done better? well, what we want to display, the fonts and the actual SPI protocol is all in one file. In a normal application that would be split up in the SPI implementation module with a clear interface. to be called from the application. FPGA's do not work that way.
+What could we have done better? well, what we want to display, the fonts and the actual SPI protocol is all in one file. In a normal application that would be split up in the SPI implementation module with a clear interface. to be called from the application. but for a Proof of Concept this is fine.
 
 Can't wait for the display to arrive

@@ -1,4 +1,4 @@
-.PHONY: help build build-frontend build-server test clean docker-build docker-up docker-down serve-frontend run-server
+.PHONY: help build build-frontend build-server test clean docker-build docker-up docker-down serve-frontend serve-dist run-server meta-pages
 
 .DEFAULT_GOAL := help
 
@@ -24,9 +24,10 @@ build-frontend: ## Build frontend only
 build-server: ## Build server only
 	cargo build -p page-stats-server
 
-# Build frontend with Trunk
-build-frontend-web: ## Build frontend with Trunk (release)
+# Build frontend with Trunk and generate social meta pages
+build-frontend-web: ## Build frontend with Trunk (release) + generate meta pages
 	cd frontend && trunk build --release
+	cargo run -p meta-gen -- --content-dir content --dist-dir dist
 
 # Test everything
 test: ## Run all tests
@@ -37,8 +38,8 @@ clean: ## Clean build artifacts
 	cargo clean
 	rm -rf dist
 
-# Serve frontend for development
-serve-frontend: ## Start frontend development server
+# Serve frontend for development (meta pages not generated; use build-frontend-web for a full build)
+serve-frontend: ## Start frontend development server (live reload, no meta pages)
 	cd frontend && trunk serve --port 8080
 
 # Run server
@@ -49,6 +50,16 @@ run-server: ## Run the page stats server
 docker-build: ## Build Docker image
 	docker build -f deploy/Dockerfile -t gertjanassies-combined .
 
+# Serve the dist/ folder as a static site — use after build-frontend-web
+# Replicates Nginx try_files: serves real files first, falls back to index.html.
+# Real browsers get the JS redirect; curl sees the raw meta tags.
+# Requires Python 3 (standard library only).
+serve-dist: ## Serve dist/ on port 8080, real files first then SPA fallback
+	python3 tools/serve_dist.py 8080 dist
 # Check workspace
 check: ## Check workspace for errors
 	cargo check --workspace
+
+# Generate static meta pages for social sharing (run after build-frontend-web)
+meta-pages: ## Generate dist/post/*/index.html with OG/Twitter meta tags
+	cargo run -p meta-gen -- --content-dir content --dist-dir dist

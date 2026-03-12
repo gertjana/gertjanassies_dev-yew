@@ -135,6 +135,9 @@ jobs:
         cd frontend
         CARGO_TARGET_DIR=../target-wasm trunk build --release
 
+    - name: Generate social meta pages
+      run: cargo run --release -p meta-gen -- --content-dir content --dist-dir dist
+
     - name: Upload frontend artifact
       uses: actions/upload-artifact@v4
       with:

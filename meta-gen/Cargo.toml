@@ -1,0 +1,9 @@
+[package]
+name = "meta-gen"
+version = "0.1.0"
+edition = "2021"
+description = "Generates static HTML meta pages for social sharing (OG + Twitter Card)"
+
+[[bin]]
+name = "meta-gen"
+path = "src/main.rs"

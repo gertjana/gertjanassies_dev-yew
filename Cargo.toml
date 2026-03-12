@@ -2,8 +2,9 @@
 members = [
     "frontend",
     "backend",
+    "meta-gen",
 ]
-default-members = ["frontend", "backend"]
+default-members = ["frontend", "backend", "meta-gen"]
 resolver = "2"
 
 [workspace.dependencies]

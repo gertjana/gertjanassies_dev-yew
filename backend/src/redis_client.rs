@@ -116,7 +116,7 @@ impl RedisPageStatsClient {
 
         let json_string = serde_json::to_string(stats).map_err(|e| {
             redis::RedisError::from((
-                redis::ErrorKind::TypeError,
+                redis::ErrorKind::Parse,
                 "JSON serialization failed",
                 e.to_string(),
             ))

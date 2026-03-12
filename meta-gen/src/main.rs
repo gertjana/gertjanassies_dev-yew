@@ -263,11 +263,11 @@ fn generate_html(slug: &str, fm: &PostFrontmatter) -> String {
   <meta name="twitter:image" content="{image}" />
 
   <!-- Redirect real browsers to the SPA immediately -->
-  <script>window.location.replace('/post/{slug}');</script>
+  <script>window.location.replace(window.location.pathname.replace(/\/index\.html?$/, ''));</script>
 </head>
 <body>
   <noscript>
-    <p><a href="/post/{slug}">Read: {title}</a></p>
+    <p><a href=".">Read: {title}</a></p>
   </noscript>
 </body>
 </html>
